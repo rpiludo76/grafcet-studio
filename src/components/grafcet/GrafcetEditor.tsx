@@ -20,6 +20,7 @@ import { GrafcetPalette } from './GrafcetPalette';
 import { StepNode } from './nodes/StepNode';
 import { InitialStepNode } from './nodes/InitialStepNode';
 import { ActionNode } from './nodes/ActionNode';
+import { TransitionNode } from './nodes/TransitionNode';
 import { GrafcetEdge } from './edges/GrafcetEdge';
 import { HorizontalEdge } from './edges/HorizontalEdge';
 import { toast } from 'sonner';
@@ -28,6 +29,7 @@ const nodeTypes = {
   step: StepNode,
   initialStep: InitialStepNode,
   action: ActionNode,
+  transition: TransitionNode,
 };
 
 const edgeTypes = {
@@ -51,6 +53,8 @@ export const GrafcetEditor = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [snapGrid, setSnapGrid] = useState(20);
   const [stepCounter, setStepCounter] = useState(1);
+  const [transitionCounter, setTransitionCounter] = useState(1);
+  const [isCtrlPressed, setIsCtrlPressed] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
   const snapToGrid = useMemo(() => [snapGrid, snapGrid] as [number, number], [snapGrid]);
@@ -88,7 +92,17 @@ export const GrafcetEditor = () => {
       setNodes((nds) => nds.filter((node) => !node.selected));
       setEdges((eds) => eds.filter((edge) => !edge.selected));
     }
+    
+    if (event.key === 'Control') {
+      setIsCtrlPressed(true);
+    }
   }, [setNodes, setEdges]);
+
+  const onKeyUp = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Control') {
+      setIsCtrlPressed(false);
+    }
+  }, []);
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
@@ -227,11 +241,79 @@ export const GrafcetEditor = () => {
   }, []);
 
   
+  const onEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
+    if (isCtrlPressed) {
+      event.stopPropagation();
+      
+      // Only allow transitions on grafcet edges between steps
+      if (edge.type !== 'grafcet') return;
+      
+      const sourceNode = nodes.find(n => n.id === edge.source);
+      const targetNode = nodes.find(n => n.id === edge.target);
+      
+      if (!sourceNode || !targetNode) return;
+      if (!['step', 'initialStep'].includes(sourceNode.type || '') || 
+          !['step', 'initialStep'].includes(targetNode.type || '')) return;
+      
+      // Calculate position at the middle of the edge
+      const sourceX = sourceNode.position.x + 32; // center of step (64/2)
+      const sourceY = sourceNode.position.y + 64; // bottom of step
+      const targetX = targetNode.position.x + 32; // center of step
+      const targetY = targetNode.position.y; // top of step
+      
+      const transitionX = (sourceX + targetX) / 2 - 30; // center minus half transition width
+      const transitionY = (sourceY + targetY) / 2 - 8; // center minus half transition height
+      
+      // Create transition node
+      const transitionNode: Node = {
+        id: `transition-${transitionCounter}`,
+        type: 'transition',
+        position: { x: transitionX, y: transitionY },
+        data: { condition: '' },
+        dragHandle: '.drag-handle',
+      };
+      
+      // Create new edges: source -> transition -> target
+      const edgeToTransition: Edge = {
+        id: `edge-${edge.source}-transition-${transitionCounter}`,
+        source: edge.source,
+        target: `transition-${transitionCounter}`,
+        type: 'grafcet',
+        animated: false,
+        style: { stroke: 'hsl(var(--grafcet-connection))' },
+      };
+      
+      const edgeFromTransition: Edge = {
+        id: `edge-transition-${transitionCounter}-${edge.target}`,
+        source: `transition-${transitionCounter}`,
+        target: edge.target,
+        type: 'grafcet',
+        animated: false,
+        style: { stroke: 'hsl(var(--grafcet-connection))' },
+      };
+      
+      // Update state
+      setNodes((nds) => [...nds, transitionNode]);
+      setEdges((eds) => {
+        const filteredEdges = eds.filter(e => e.id !== edge.id);
+        return [...filteredEdges, edgeToTransition, edgeFromTransition];
+      });
+      setTransitionCounter(prev => prev + 1);
+      
+      toast.success('Transition créée');
+    }
+  }, [isCtrlPressed, nodes, transitionCounter, setNodes, setEdges]);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => onKeyDown(event);
+    const handleKeyUp = (event: KeyboardEvent) => onKeyUp(event);
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [onKeyDown]);
+    document.addEventListener('keyup', handleKeyUp);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [onKeyDown, onKeyUp]);
 
   return (
     <div className="h-screen w-screen flex flex-col bg-background">
@@ -255,6 +337,7 @@ export const GrafcetEditor = () => {
             onConnect={onConnect}
             onDrop={onDrop}
             onDragOver={onDragOver}
+            onEdgeClick={onEdgeClick}
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes}
             snapToGrid={true}
