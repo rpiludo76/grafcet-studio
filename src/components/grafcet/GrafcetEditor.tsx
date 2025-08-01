@@ -21,6 +21,7 @@ import { StepNode } from './nodes/StepNode';
 import { InitialStepNode } from './nodes/InitialStepNode';
 import { ActionNode } from './nodes/ActionNode';
 import { GrafcetEdge } from './edges/GrafcetEdge';
+import { HorizontalEdge } from './edges/HorizontalEdge';
 import { toast } from 'sonner';
 
 const nodeTypes = {
@@ -31,6 +32,7 @@ const nodeTypes = {
 
 const edgeTypes = {
   grafcet: GrafcetEdge,
+  horizontal: HorizontalEdge,
 };
 
 interface GrafcetData {
@@ -55,16 +57,31 @@ export const GrafcetEditor = () => {
 
   const onConnect = useCallback(
     (params: Connection) => {
+      // Determine edge type based on source and target positions
+      const sourceNode = nodes.find(n => n.id === params.source);
+      const targetNode = nodes.find(n => n.id === params.target);
+      
+      let edgeType = 'grafcet';
+      let animated = false;
+      
+      // If connecting from step right handle to action, use horizontal edge
+      if (sourceNode?.type === 'step' || sourceNode?.type === 'initialStep') {
+        if (targetNode?.type === 'action' && params.sourceHandle === null) {
+          // Check if connection is from right handle (position-based)
+          edgeType = 'horizontal';
+        }
+      }
+
       const edge: Edge = {
         ...params,
         id: `edge-${params.source}-${params.target}`,
-        type: 'step',
-        animated: true,
+        type: edgeType,
+        animated,
         style: { stroke: 'hsl(var(--grafcet-connection))' },
       };
       setEdges((eds) => addEdge(edge, eds));
     },
-    [setEdges]
+    [setEdges, nodes]
   );
 
   const onDragOver = useCallback((event: React.DragEvent) => {
