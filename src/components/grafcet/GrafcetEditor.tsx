@@ -58,7 +58,7 @@ export const GrafcetEditor = () => {
       const edge: Edge = {
         ...params,
         id: `edge-${params.source}-${params.target}`,
-        type: 'grafcet',
+        type: 'step',
         animated: true,
         style: { stroke: 'hsl(var(--grafcet-connection))' },
       };

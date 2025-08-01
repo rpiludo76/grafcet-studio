@@ -45,7 +45,7 @@ export const ActionNode = memo(({ data, selected }: NodeProps) => {
       {/* Action node */}
       <div
         className={cn(
-          "min-w-24 max-w-48 h-12 px-4 bg-grafcet-action text-grafcet-action-foreground border-2 border-grafcet-action",
+          "min-w-24 max-w-48 h-16 px-4 bg-grafcet-action text-grafcet-action-foreground border-2 border-grafcet-action",
           "flex items-center justify-center font-medium text-sm cursor-pointer",
           "drag-handle shadow-lg rounded-sm",
           selected && "ring-2 ring-ring ring-offset-2"
