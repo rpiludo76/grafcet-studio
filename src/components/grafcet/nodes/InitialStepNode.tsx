@@ -37,13 +37,24 @@ export const InitialStepNode = memo(({ data, selected }: NodeProps) => {
 
   return (
     <div className="group relative">
-      {/* Only bottom handle for initial step */}
+      {/* Bottom handle for connecting to next steps */}
       <Handle
         type="source"
         position={Position.Bottom}
         className={cn(
           "w-3 h-3 !bg-grafcet-step-initial border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity",
           "!-bottom-2 !left-1/2 !transform !-translate-x-1/2"
+        )}
+      />
+      
+      {/* Right handle for connecting to actions */}
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="right"
+        className={cn(
+          "w-3 h-3 !bg-grafcet-step-initial border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity",
+          "!-right-2 !top-1/2 !transform !-translate-y-1/2"
         )}
       />
 

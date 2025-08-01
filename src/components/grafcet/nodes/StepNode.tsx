@@ -59,6 +59,7 @@ export const StepNode = memo(({ data, selected }: NodeProps) => {
       <Handle
         type="source"
         position={Position.Right}
+        id="right"
         className={cn(
           "w-3 h-3 !bg-grafcet-step border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity",
           "!-right-2 !top-1/2 !transform !-translate-y-1/2"

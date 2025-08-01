@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, useRef } from 'react';
+import { useCallback, useMemo, useState, useRef, useEffect } from 'react';
 import {
   ReactFlow,
   addEdge,
@@ -64,12 +64,11 @@ export const GrafcetEditor = () => {
       let edgeType = 'grafcet';
       let animated = false;
       
-      // If connecting from step right handle to action, use horizontal edge
-      if (sourceNode?.type === 'step' || sourceNode?.type === 'initialStep') {
-        if (targetNode?.type === 'action' && params.sourceHandle === null) {
-          // Check if connection is from right handle (position-based)
-          edgeType = 'horizontal';
-        }
+      // If connecting to action, force horizontal connection from right handle
+      if (targetNode?.type === 'action') {
+        edgeType = 'horizontal';
+        // Override source handle to ensure right connection
+        params.sourceHandle = 'right';
       }
 
       const edge: Edge = {
@@ -83,6 +82,13 @@ export const GrafcetEditor = () => {
     },
     [setEdges, nodes]
   );
+
+  const onKeyDown = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Delete' || event.key === 'Backspace') {
+      setNodes((nds) => nds.filter((node) => !node.selected));
+      setEdges((eds) => eds.filter((edge) => !edge.selected));
+    }
+  }, [setNodes, setEdges]);
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
@@ -219,6 +225,13 @@ export const GrafcetEditor = () => {
       toast.error('Erreur lors de l\'export de l\'image');
     }
   }, []);
+
+  
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => onKeyDown(event);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onKeyDown]);
 
   return (
     <div className="h-screen w-screen flex flex-col bg-background">
