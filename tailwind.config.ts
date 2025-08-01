@@ -24,6 +24,20 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				
+				// GRAFCET specific colors
+				'grafcet-step': 'hsl(var(--grafcet-step))',
+				'grafcet-step-foreground': 'hsl(var(--grafcet-step-foreground))',
+				'grafcet-step-initial': 'hsl(var(--grafcet-step-initial))',
+				'grafcet-step-initial-foreground': 'hsl(var(--grafcet-step-initial-foreground))',
+				'grafcet-action': 'hsl(var(--grafcet-action))',
+				'grafcet-action-foreground': 'hsl(var(--grafcet-action-foreground))',
+				'grafcet-connection': 'hsl(var(--grafcet-connection))',
+				'grafcet-grid': 'hsl(var(--grafcet-grid))',
+				'grafcet-grid-major': 'hsl(var(--grafcet-grid-major))',
+				'palette-bg': 'hsl(var(--palette-bg))',
+				'toolbar-bg': 'hsl(var(--toolbar-bg))',
+				'canvas-bg': 'hsl(var(--canvas-bg))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'

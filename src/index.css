@@ -2,14 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* GRAFCET Editor Design System - Technical/Engineering Interface
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 98%;
+    --foreground: 210 15% 20%;
+    
+    /* GRAFCET specific colors */
+    --grafcet-step: 220 70% 50%;
+    --grafcet-step-foreground: 0 0% 100%;
+    --grafcet-step-initial: 35 100% 50%;
+    --grafcet-step-initial-foreground: 0 0% 0%;
+    --grafcet-action: 270 50% 40%;
+    --grafcet-action-foreground: 0 0% 100%;
+    --grafcet-connection: 210 15% 30%;
+    --grafcet-grid: 210 15% 85%;
+    --grafcet-grid-major: 210 15% 75%;
+    
+    /* Interface colors */
+    --palette-bg: 0 0% 96%;
+    --toolbar-bg: 0 0% 94%;
+    --canvas-bg: 0 0% 100%;
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -56,8 +72,24 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 220 25% 8%;
+    --foreground: 210 40% 95%;
+    
+    /* GRAFCET dark mode colors */
+    --grafcet-step: 220 70% 60%;
+    --grafcet-step-foreground: 0 0% 0%;
+    --grafcet-step-initial: 35 90% 60%;
+    --grafcet-step-initial-foreground: 0 0% 0%;
+    --grafcet-action: 270 60% 60%;
+    --grafcet-action-foreground: 0 0% 0%;
+    --grafcet-connection: 210 15% 70%;
+    --grafcet-grid: 210 15% 25%;
+    --grafcet-grid-major: 210 15% 35%;
+    
+    /* Interface dark colors */
+    --palette-bg: 220 25% 12%;
+    --toolbar-bg: 220 25% 10%;
+    --canvas-bg: 220 25% 15%;
 
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
