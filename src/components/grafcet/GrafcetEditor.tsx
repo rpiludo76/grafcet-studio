@@ -264,40 +264,19 @@ export const GrafcetEditor = () => {
       const transitionX = (sourceX + targetX) / 2 - 12; // center minus half transition width
       const transitionY = (sourceY + targetY) / 2 - 8; // center minus half transition height
       
-      // Create transition node
+      // Create transition node without handles
       const transitionNode: Node = {
         id: `transition-${transitionCounter}`,
         type: 'transition',
         position: { x: transitionX, y: transitionY },
         data: { condition: '' },
         dragHandle: '.drag-handle',
+        selectable: true,
+        draggable: true,
       };
       
-      // Create new edges: source -> transition -> target
-      const edgeToTransition: Edge = {
-        id: `edge-${edge.source}-transition-${transitionCounter}`,
-        source: edge.source,
-        target: `transition-${transitionCounter}`,
-        type: 'grafcet',
-        animated: false,
-        style: { stroke: 'hsl(var(--grafcet-connection))' },
-      };
-      
-      const edgeFromTransition: Edge = {
-        id: `edge-transition-${transitionCounter}-${edge.target}`,
-        source: `transition-${transitionCounter}`,
-        target: edge.target,
-        type: 'grafcet',
-        animated: false,
-        style: { stroke: 'hsl(var(--grafcet-connection))' },
-      };
-      
-      // Update state
+      // Add transition node without modifying existing edges
       setNodes((nds) => [...nds, transitionNode]);
-      setEdges((eds) => {
-        const filteredEdges = eds.filter(e => e.id !== edge.id);
-        return [...filteredEdges, edgeToTransition, edgeFromTransition];
-      });
       setTransitionCounter(prev => prev + 1);
       
       toast.success('Transition créée');

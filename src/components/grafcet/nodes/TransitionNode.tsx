@@ -32,25 +32,6 @@ export const TransitionNode = memo(({ data, selected }: NodeProps) => {
 
   return (
     <div className="group relative flex items-center">
-      {/* Top handle */}
-      <Handle
-        type="target"
-        position={Position.Top}
-        className={cn(
-          "w-3 h-3 !bg-grafcet-connection border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity",
-          "!-top-2 !left-1/2 !transform !-translate-x-1/2"
-        )}
-      />
-      
-      {/* Bottom handle */}
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        className={cn(
-          "w-3 h-3 !bg-grafcet-connection border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity",
-          "!-bottom-2 !left-1/2 !transform !-translate-x-1/2"
-        )}
-      />
 
       {/* Horizontal transition line */}
       <div className="flex items-center">
