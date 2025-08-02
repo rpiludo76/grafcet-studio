@@ -52,7 +52,7 @@ const PaletteItem = ({ type, children }: PaletteItemProps) => {
 
 export const GrafcetPalette = () => {
   return (
-    <div className="w-64 bg-palette-bg border-r border-border p-4 overflow-y-auto">
+    <div className="w-44 bg-palette-bg border-r border-border p-4 overflow-y-auto">
       <div className="space-y-6">
         <div>
           <h2 className="text-sm font-semibold text-foreground mb-3 flex items-center">
