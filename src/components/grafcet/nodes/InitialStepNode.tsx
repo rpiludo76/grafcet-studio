@@ -1,6 +1,7 @@
 import { memo, useState } from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
 import { cn } from '@/lib/utils';
+import { STEP_WIDTH, STEP_HEIGHT } from '../constants';
 
 interface InitialStepNodeData {
   number: number;
@@ -62,11 +63,12 @@ export const InitialStepNode = memo(({ data, selected }: NodeProps) => {
       <div className="relative">
         <div
           className={cn(
-            "w-12 h-12 bg-grafcet-step-initial text-grafcet-step-initial-foreground border-4 border-grafcet-step-initial rounded-sm",
+            "bg-grafcet-step-initial text-grafcet-step-initial-foreground border-4 border-grafcet-step-initial rounded-sm",
             "flex items-center justify-center font-bold text-lg cursor-pointer",
             "drag-handle shadow-lg",
             selected && "ring-2 ring-ring ring-offset-2"
           )}
+		  style={{ width: STEP_WIDTH, height: STEP_HEIGHT }}
           onDoubleClick={handleDoubleClick}
         >
           {isEditing ? (

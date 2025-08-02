@@ -1,6 +1,7 @@
 import { memo, useState } from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
 import { cn } from '@/lib/utils';
+import { STEP_HEIGHT } from '../constants';
 
 interface ActionNodeData {
   text: string;
@@ -45,11 +46,12 @@ export const ActionNode = memo(({ data, selected }: NodeProps) => {
       {/* Action node */}
       <div
         className={cn(
-          "min-w-24 max-w-48 w-24 h-12 bg-grafcet-action text-grafcet-action-foreground border-2 border-grafcet-action",
+          "min-w-24 max-w-48 w-24 bg-grafcet-action text-grafcet-action-foreground border-2 border-grafcet-action",
           "flex items-center justify-center font-medium text-sm cursor-pointer",
           "drag-handle shadow-lg rounded-sm",
           selected && "ring-2 ring-ring ring-offset-2"
         )}
+		style={{ height: STEP_HEIGHT }}
         onDoubleClick={handleDoubleClick}
       >
         {isEditing ? (
