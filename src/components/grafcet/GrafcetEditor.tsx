@@ -115,10 +115,21 @@ export const GrafcetEditor = () => {
     (event: React.DragEvent) => {
       event.preventDefault();
 
-      const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
+      const wrapper = reactFlowWrapper.current;
+      if (!wrapper) {
+        toast.error('Zone de dépôt introuvable');
+        return;
+      }
+
+      if (typeof reactFlowInstance.project !== 'function') {
+        toast.error("React Flow n'est pas prêt");
+        return;
+      }
+
+      const reactFlowBounds = wrapper.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
 
-      if (typeof type === 'undefined' || !type || !reactFlowBounds) {
+      if (typeof type === 'undefined' || !type) {
         return;
       }
 
