@@ -130,8 +130,8 @@ export const GrafcetEditor = () => {
       }
 
       const position = {
-        x: Math.round((event.clientX - reactFlowBounds.left) / snapGrid) * snapGrid,
-        y: Math.round((event.clientY - reactFlowBounds.top) / snapGrid) * snapGrid,
+        x: Math.round((event.clientX - reactFlowBounds.left - 32) / snapGrid) * snapGrid, // -32 pour centrer l'objet
+        y: Math.round((event.clientY - reactFlowBounds.top - 32) / snapGrid) * snapGrid, // -32 pour centrer l'objet
       };
 
       let nodeData: any = {};
