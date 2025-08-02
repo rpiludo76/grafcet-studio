@@ -12,7 +12,6 @@ import {
   Node,
   BackgroundVariant,
   ConnectionMode,
-  useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -57,7 +56,6 @@ export const GrafcetEditor = () => {
   const [transitionCounter, setTransitionCounter] = useState(1);
   const [isCtrlPressed, setIsCtrlPressed] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const { screenToFlowPosition } = useReactFlow();
 
   const snapToGrid = useMemo(() => [snapGrid, snapGrid] as [number, number], [snapGrid]);
 
@@ -115,9 +113,10 @@ export const GrafcetEditor = () => {
     (event: React.DragEvent) => {
       event.preventDefault();
 
+      const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
 
-      if (typeof type === 'undefined' || !type) {
+      if (typeof type === 'undefined' || !type || !reactFlowBounds) {
         return;
       }
 
@@ -130,16 +129,14 @@ export const GrafcetEditor = () => {
         }
       }
 
-      // Convert screen coordinates to flow coordinates
-      const position = screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
-      });
+      // Calculate position relative to ReactFlow container
+      const clientX = event.clientX - reactFlowBounds.left;
+      const clientY = event.clientY - reactFlowBounds.top;
 
       // Snap to grid
       const snappedPosition = {
-        x: Math.round(position.x / snapGrid) * snapGrid,
-        y: Math.round(position.y / snapGrid) * snapGrid,
+        x: Math.round(clientX / snapGrid) * snapGrid,
+        y: Math.round(clientY / snapGrid) * snapGrid,
       };
 
       let nodeData: any = {};
@@ -165,7 +162,7 @@ export const GrafcetEditor = () => {
       setNodes((nds) => nds.concat(newNode));
       toast.success(`${type === 'initialStep' ? 'Étape initiale' : type === 'step' ? 'Étape' : 'Action'} ajoutée`);
     },
-    [nodes, snapGrid, stepCounter, setNodes, screenToFlowPosition]
+    [nodes, snapGrid, stepCounter, setNodes]
   );
 
   const saveGrafcet = useCallback(() => {
