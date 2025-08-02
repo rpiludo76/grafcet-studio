@@ -69,7 +69,7 @@ export const StepNode = memo(({ data, selected }: NodeProps) => {
       {/* Step node */}
       <div
         className={cn(
-          "w-16 h-16 bg-grafcet-step text-grafcet-step-foreground border-2 border-grafcet-step rounded-sm",
+          "w-12 h-12 bg-grafcet-step text-grafcet-step-foreground border-2 border-grafcet-step rounded-sm",
           "flex items-center justify-center font-bold text-lg cursor-pointer",
           "drag-handle shadow-lg",
           selected && "ring-2 ring-ring ring-offset-2"
