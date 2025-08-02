@@ -134,8 +134,8 @@ export const GrafcetEditor = () => {
       }
 	  
 	  const nodeDimensions: Record<string, { width: number; height: number }> = {
-        step: { width: 64, height: 64 },
-        initialStep: { width: 64, height: 64 },
+        step: { width: 48, height: 48 },
+        initialStep: { width: 48, height: 48 },
         action: { width: 96, height: 48 },
       };
 
@@ -146,14 +146,12 @@ export const GrafcetEditor = () => {
       const parsedWidth = widthStr ? parseFloat(widthStr) : NaN;
       const parsedHeight = heightStr ? parseFloat(heightStr) : NaN;
 
-      const elementWidth =
-        !isNaN(parsedWidth) && parsedWidth === defaultSize.width
-          ? parsedWidth
-          : defaultSize.width;
-      const elementHeight =
-        !isNaN(parsedHeight) && parsedHeight === defaultSize.height
-          ? parsedHeight
-          : defaultSize.height;
+      const elementWidth = !isNaN(parsedWidth)
+        ? parsedWidth
+        : defaultSize.width;
+      const elementHeight = !isNaN(parsedHeight)
+        ? parsedHeight
+        : defaultSize.height;
 
       // Check if trying to add multiple initial steps
       if (type === 'initialStep') {
