@@ -129,15 +129,27 @@ export const GrafcetEditor = () => {
         }
       }
 
-      // Calculate position relative to ReactFlow container without any offset
+      // Debug: Log all coordinates
+      console.log('=== DROP DEBUG ===');
+      console.log('event.clientX:', event.clientX);
+      console.log('event.clientY:', event.clientY);
+      console.log('reactFlowBounds:', reactFlowBounds);
+      
+      // Calculate position relative to ReactFlow container
       const clientX = event.clientX - reactFlowBounds.left;
       const clientY = event.clientY - reactFlowBounds.top;
+      
+      console.log('clientX (relative):', clientX);
+      console.log('clientY (relative):', clientY);
 
-      // Apply position directly without snapping for testing
+      // Apply position directly 
       const snappedPosition = {
         x: clientX - 32, // Offset to center the node on cursor
         y: clientY - 32, // Offset to center the node on cursor
       };
+      
+      console.log('Final position:', snappedPosition);
+      console.log('==================');
 
       let nodeData: any = {};
       let nodeId = '';
