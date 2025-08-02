@@ -12,6 +12,7 @@ import {
   Node,
   BackgroundVariant,
   ConnectionMode,
+  useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -56,6 +57,7 @@ export const GrafcetEditor = () => {
   const [transitionCounter, setTransitionCounter] = useState(1);
   const [isCtrlPressed, setIsCtrlPressed] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const { screenToFlowPosition } = useReactFlow();
 
   const snapToGrid = useMemo(() => [snapGrid, snapGrid] as [number, number], [snapGrid]);
 
@@ -113,10 +115,9 @@ export const GrafcetEditor = () => {
     (event: React.DragEvent) => {
       event.preventDefault();
 
-      const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
 
-      if (typeof type === 'undefined' || !type || !reactFlowBounds) {
+      if (typeof type === 'undefined' || !type) {
         return;
       }
 
@@ -129,9 +130,16 @@ export const GrafcetEditor = () => {
         }
       }
 
-      const position = {
-        x: Math.round((event.clientX - reactFlowBounds.left - 32) / snapGrid) * snapGrid, // -32 pour centrer l'objet
-        y: Math.round((event.clientY - reactFlowBounds.top - 32) / snapGrid) * snapGrid, // -32 pour centrer l'objet
+      // Convert screen coordinates to flow coordinates
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+
+      // Snap to grid
+      const snappedPosition = {
+        x: Math.round(position.x / snapGrid) * snapGrid,
+        y: Math.round(position.y / snapGrid) * snapGrid,
       };
 
       let nodeData: any = {};
@@ -149,7 +157,7 @@ export const GrafcetEditor = () => {
       const newNode: Node = {
         id: nodeId,
         type,
-        position,
+        position: snappedPosition,
         data: nodeData,
         dragHandle: '.drag-handle',
       };
@@ -157,7 +165,7 @@ export const GrafcetEditor = () => {
       setNodes((nds) => nds.concat(newNode));
       toast.success(`${type === 'initialStep' ? 'Étape initiale' : type === 'step' ? 'Étape' : 'Action'} ajoutée`);
     },
-    [nodes, snapGrid, stepCounter, setNodes]
+    [nodes, snapGrid, stepCounter, setNodes, screenToFlowPosition]
   );
 
   const saveGrafcet = useCallback(() => {
