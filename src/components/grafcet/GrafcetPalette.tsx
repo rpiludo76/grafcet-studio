@@ -1,13 +1,11 @@
-import { Circle, Square, Zap } from 'lucide-react';
+import { Square } from 'lucide-react';
 
 interface PaletteItemProps {
   type: string;
-  label: string;
-  icon: React.ReactNode;
-  description: string;
+  children: React.ReactNode;
 }
 
-const PaletteItem = ({ type, label, icon, description }: PaletteItemProps) => {
+const PaletteItem = ({ type, children }: PaletteItemProps) => {
   const onDragStart = (event: React.DragEvent, nodeType: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
@@ -15,17 +13,11 @@ const PaletteItem = ({ type, label, icon, description }: PaletteItemProps) => {
 
   return (
     <div
-      className="flex items-center p-3 rounded-lg bg-card border-2 border-dashed border-border hover:border-primary cursor-grab active:cursor-grabbing transition-colors group"
+      className="cursor-grab active:cursor-grabbing"
       draggable
       onDragStart={(event) => onDragStart(event, type)}
     >
-      <div className="flex-shrink-0 p-2 rounded-md bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-        {icon}
-      </div>
-      <div className="ml-3 flex-1">
-        <p className="text-sm font-medium text-foreground">{label}</p>
-        <p className="text-xs text-muted-foreground">{description}</p>
-      </div>
+      {children}
     </div>
   );
 };
@@ -45,26 +37,26 @@ export const GrafcetPalette = () => {
         </div>
         
         <div className="space-y-3">
-          <PaletteItem
-            type="initialStep"
-            label="Étape initiale"
-            icon={<Circle className="w-5 h-5" />}
-            description="Point de départ du GRAFCET"
-          />
-          
-          <PaletteItem
-            type="step"
-            label="Étape"
-            icon={<Square className="w-5 h-5" />}
-            description="Étape normale du processus"
-          />
-          
-          <PaletteItem
-            type="action"
-            label="Action"
-            icon={<Zap className="w-5 h-5" />}
-            description="Action associée à une étape"
-          />
+          <PaletteItem type="initialStep">
+            <div className="relative">
+              <div className="w-12 h-12 bg-grafcet-step-initial text-grafcet-step-initial-foreground border-4 border-grafcet-step-initial rounded-sm flex items-center justify-center font-bold text-sm shadow-lg">
+                0
+              </div>
+              <div className="absolute inset-1 border-2 border-grafcet-step-initial rounded-sm pointer-events-none" />
+            </div>
+          </PaletteItem>
+
+          <PaletteItem type="step">
+            <div className="w-12 h-12 bg-grafcet-step text-grafcet-step-foreground border-2 border-grafcet-step rounded-sm flex items-center justify-center font-bold text-sm shadow-lg">
+              1
+            </div>
+          </PaletteItem>
+
+          <PaletteItem type="action">
+            <div className="min-w-24 max-w-48 h-12 px-2 bg-grafcet-action text-grafcet-action-foreground border-2 border-grafcet-action flex items-center justify-center font-medium text-xs rounded-sm shadow-lg">
+              Action
+            </div>
+          </PaletteItem>
         </div>
         
         <div className="mt-8 p-3 bg-muted rounded-lg">
