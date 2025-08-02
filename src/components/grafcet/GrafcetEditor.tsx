@@ -255,6 +255,8 @@ export const GrafcetEditor = () => {
             0
           );
         setStepCounter(maxStepNumber + 1);
+		
+        reactFlowInstance.fitView();
         
         toast.success('GRAFCET chargé avec succès');
       } catch (error) {
@@ -265,7 +267,7 @@ export const GrafcetEditor = () => {
     
     // Reset input
     event.target.value = '';
-  }, [setNodes, setEdges]);
+  }, [setNodes, setEdges, reactFlowInstance]);
 
   const exportImage = useCallback(async () => {
     const { default: html2canvas } = await import('html2canvas');
@@ -333,7 +335,7 @@ export const GrafcetEditor = () => {
       
       toast.success('Transition créée');
     }
-  }, [isCtrlPressed, nodes, transitionCounter, setNodes, setEdges]);
+  }, [isCtrlPressed, nodes, transitionCounter, setNodes]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => onKeyDown(event);
@@ -374,7 +376,7 @@ export const GrafcetEditor = () => {
             snapToGrid={true}
             snapGrid={snapToGrid}
             connectionMode={ConnectionMode.Loose}
-            fitView
+
             attributionPosition="bottom-left"
             style={{ backgroundColor: 'hsl(var(--canvas-bg))' }}
           >
