@@ -12,6 +12,7 @@ import {
   Node,
   BackgroundVariant,
   ConnectionMode,
+  useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -56,6 +57,7 @@ export const GrafcetEditor = () => {
   const [transitionCounter, setTransitionCounter] = useState(1);
   const [isCtrlPressed, setIsCtrlPressed] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const reactFlowInstance = useReactFlow();
 
   const snapToGrid = useMemo(() => [snapGrid, snapGrid] as [number, number], [snapGrid]);
 
@@ -129,27 +131,19 @@ export const GrafcetEditor = () => {
         }
       }
 
-      // Debug: Log all coordinates
-      console.log('=== DROP DEBUG ===');
-      console.log('event.clientX:', event.clientX);
-      console.log('event.clientY:', event.clientY);
-      console.log('reactFlowBounds:', reactFlowBounds);
-      
-      // Calculate position relative to ReactFlow container
-      const clientX = event.clientX - reactFlowBounds.left;
-      const clientY = event.clientY - reactFlowBounds.top;
-      
-      console.log('clientX (relative):', clientX);
-      console.log('clientY (relative):', clientY);
+      // Codex depose objets sur souris
+      const position = reactFlowInstance.project({
+        x: event.clientX - reactFlowBounds.left,
+        y: event.clientY - reactFlowBounds.top,
+      });
 
       // Apply position directly 
       const snappedPosition = {
-        x: clientX - 32, // Offset to center the node on cursor
-        y: clientY - 32, // Offset to center the node on cursor
+        //x: clientX - 32, // Offset to center the node on cursor
+        //y: clientY - 32, // Offset to center the node on cursor
+		x: position.x - 32,
+        y: position.y - 32,
       };
-      
-      console.log('Final position:', snappedPosition);
-      console.log('==================');
 
       let nodeData: any = {};
       let nodeId = '';
@@ -174,7 +168,7 @@ export const GrafcetEditor = () => {
       setNodes((nds) => nds.concat(newNode));
       toast.success(`${type === 'initialStep' ? 'Étape initiale' : type === 'step' ? 'Étape' : 'Action'} ajoutée`);
     },
-    [nodes, snapGrid, stepCounter, setNodes]
+	[nodes, stepCounter, setNodes, reactFlowInstance]
   );
 
   const saveGrafcet = useCallback(() => {
