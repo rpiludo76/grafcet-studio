@@ -12,12 +12,12 @@ All colors MUST be HSL.
     --foreground: 210 15% 20%;
     
     /* GRAFCET specific colors */
-    --grafcet-step: 220 70% 50%;
-    --grafcet-step-foreground: 0 0% 100%;
-    --grafcet-step-initial: 35 100% 50%;
+    --grafcet-step: 50 20% 80%;
+    --grafcet-step-foreground: 0 0% 0%;
+    --grafcet-step-initial: 60 100% 50%;
     --grafcet-step-initial-foreground: 0 0% 0%;
-    --grafcet-action: 270 50% 40%;
-    --grafcet-action-foreground: 0 0% 100%;
+    --grafcet-action: 50 25% 60%;
+    --grafcet-action-foreground: 0 0% 0%;
     --grafcet-connection: 210 15% 30%;
     --grafcet-grid: 210 15% 85%;
     --grafcet-grid-major: 210 15% 75%;
