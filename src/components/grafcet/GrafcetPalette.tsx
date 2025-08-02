@@ -1,18 +1,37 @@
 import { Square } from 'lucide-react';
+import { useRef, type ReactNode } from 'react';
 
 interface PaletteItemProps {
   type: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const PaletteItem = ({ type, children }: PaletteItemProps) => {
+const ref = useRef<HTMLDivElement>(null);
+
   const onDragStart = (event: React.DragEvent, nodeType: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
+	
+    const element = ref.current;
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      const clone = element.cloneNode(true) as HTMLElement;
+      clone.style.position = 'absolute';
+      clone.style.top = '-1000px';
+      clone.style.left = '-1000px';
+      clone.style.pointerEvents = 'none';
+      document.body.appendChild(clone);
+      event.dataTransfer.setDragImage(clone, rect.width / 2, rect.height / 2);
+      setTimeout(() => {
+        document.body.removeChild(clone);
+      }, 0);
+    }
   };
 
   return (
     <div
+	  ref={ref}
       className="cursor-grab active:cursor-grabbing"
       draggable
       onDragStart={(event) => onDragStart(event, type)}
