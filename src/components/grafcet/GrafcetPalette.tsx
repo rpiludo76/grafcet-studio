@@ -61,7 +61,7 @@ export const GrafcetPalette = () => {
               <div className="w-12 h-12 bg-grafcet-step-initial text-grafcet-step-initial-foreground border-4 border-grafcet-step-initial rounded-sm flex items-center justify-center font-bold text-sm shadow-lg">
                 0
               </div>
-              <div className="absolute inset-1 border-2 border-grafcet-step-initial rounded-sm pointer-events-none" />
+              
             </div>
           </PaletteItem>
 
