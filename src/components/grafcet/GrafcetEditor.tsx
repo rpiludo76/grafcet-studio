@@ -38,6 +38,9 @@ const edgeTypes = {
   horizontal: HorizontalEdge,
 };
 
+const STEP_WIDTH = 48;
+const STEP_HEIGHT = 48;
+
 interface GrafcetData {
   nodes: Node[];
   edges: Edge[];
@@ -171,12 +174,18 @@ export const GrafcetEditor = () => {
         y: event.clientY,
       });	  
 	  
-	        
+      // Calculate raw position centered on the node
+      const rawX = position.x - elementWidth / 2;
+      const rawY = position.y - elementHeight / 2;
+
+      // Snap position to grid
+      const snappedX = Math.round(rawX / snapGrid) * snapGrid;
+      const snappedY = Math.round(rawY / snapGrid) * snapGrid;	        
 
       // Apply position directly 
       const snappedPosition = {
-        x: position.x - elementWidth / 2,
-        y: position.y - elementHeight / 2,
+        x: snappedX,
+        y: snappedY,
       };
 
       let nodeData: Record<string, unknown> = {};
@@ -202,7 +211,7 @@ export const GrafcetEditor = () => {
       setNodes((nds) => nds.concat(newNode));
       toast.success(`${type === 'initialStep' ? 'Étape initiale' : type === 'step' ? 'Étape' : 'Action'} ajoutée`);
     },
-	[nodes, stepCounter, setNodes, reactFlowInstance]
+    [nodes, stepCounter, setNodes, reactFlowInstance, snapGrid]
   );
 
   const saveGrafcet = useCallback(() => {
@@ -310,9 +319,9 @@ export const GrafcetEditor = () => {
           !['step', 'initialStep'].includes(targetNode.type || '')) return;
       
       // Calculate position at the middle of the edge
-      const sourceX = sourceNode.position.x + 32; // center of step (64/2)
-      const sourceY = sourceNode.position.y + 64; // bottom of step
-      const targetX = targetNode.position.x + 32; // center of step
+      const sourceX = sourceNode.position.x + STEP_WIDTH / 2; // center of step
+      const sourceY = sourceNode.position.y + STEP_HEIGHT; // bottom of step
+      const targetX = targetNode.position.x + STEP_WIDTH / 2; // center of step
       const targetY = targetNode.position.y; // top of step
       
       const transitionX = (sourceX + targetX) / 2 - 12; // center minus half transition width
