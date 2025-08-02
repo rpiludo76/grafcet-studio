@@ -1,5 +1,6 @@
 import { Square } from 'lucide-react';
 import { useRef, type ReactNode } from 'react';
+import { STEP_WIDTH, STEP_HEIGHT } from './constants';
 
 interface PaletteItemProps {
   type: string;
@@ -67,22 +68,31 @@ export const GrafcetPalette = () => {
         <div className="space-y-3">
           <PaletteItem type="initialStep">
             <div className="relative">
-              <div className="w-12 h-12 bg-grafcet-step-initial text-grafcet-step-initial-foreground border-4 border-grafcet-step-initial rounded-sm flex items-center justify-center font-bold text-sm shadow-lg">
-                0
+                            <div
+                className="bg-grafcet-step-initial text-grafcet-step-initial-foreground border-4 border-grafcet-step-initial rounded-sm flex items-center justify-center font-bold text-sm shadow-lg"
+                style={{ width: STEP_WIDTH, height: STEP_HEIGHT }}
+              >
+			    0
               </div>
               
             </div>
           </PaletteItem>
 
           <PaletteItem type="step">
-            <div className="w-12 h-12 bg-grafcet-step text-grafcet-step-foreground border-2 border-grafcet-step rounded-sm flex items-center justify-center font-bold text-sm shadow-lg">
+            <div
+              className="bg-grafcet-step text-grafcet-step-foreground border-2 border-grafcet-step rounded-sm flex items-center justify-center font-bold text-sm shadow-lg"
+              style={{ width: STEP_WIDTH, height: STEP_HEIGHT }}
+            >
               1
             </div>
           </PaletteItem>
 
           <PaletteItem type="action">
-                <div className="min-w-24 max-w-48 w-24 h-12  bg-grafcet-action text-grafcet-action-foreground border-2 border-grafcet-action flex items-center justify-center font-medium text-xs rounded-sm shadow-lg">
-              Action
+            <div
+              className="min-w-24 max-w-48 w-24 bg-grafcet-action text-grafcet-action-foreground border-2 border-grafcet-action flex items-center justify-center font-medium text-xs rounded-sm shadow-lg"
+              style={{ height: STEP_HEIGHT }}
+              >
+			  Action
             </div>
           </PaletteItem>
         </div>

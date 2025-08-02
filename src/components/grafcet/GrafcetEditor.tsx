@@ -25,6 +25,7 @@ import { TransitionNode } from './nodes/TransitionNode';
 import { GrafcetEdge } from './edges/GrafcetEdge';
 import { HorizontalEdge } from './edges/HorizontalEdge';
 import { toast } from 'sonner';
+import { STEP_WIDTH, STEP_HEIGHT } from './constants';
 
 const nodeTypes = {
   step: StepNode,
@@ -37,9 +38,6 @@ const edgeTypes = {
   grafcet: GrafcetEdge,
   horizontal: HorizontalEdge,
 };
-
-const STEP_WIDTH = 48;
-const STEP_HEIGHT = 48;
 
 interface GrafcetData {
   nodes: Node[];
@@ -135,11 +133,11 @@ export const GrafcetEditor = () => {
       if (typeof type === 'undefined' || !type) {
         return;
       }
-	  
-	  const nodeDimensions: Record<string, { width: number; height: number }> = {
-        step: { width: 48, height: 48 },
-        initialStep: { width: 48, height: 48 },
-        action: { width: 96, height: 48 },
+
+      const nodeDimensions: Record<string, { width: number; height: number }> = {
+        step: { width: STEP_WIDTH, height: STEP_HEIGHT },
+        initialStep: { width: STEP_WIDTH, height: STEP_HEIGHT },
+        action: { width: 96, height: STEP_HEIGHT },
       };
 
       const widthStr = event.dataTransfer.getData('application/reactflow/width');
