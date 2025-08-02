@@ -142,19 +142,13 @@ export const GrafcetEditor = () => {
         }
       }
 
-      // Codex depose objets sur souris
       const position = reactFlowInstance.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
 
       // Apply position directly 
-      const snappedPosition = {
-        //x: clientX - 32, // Offset to center the node on cursor
-        //y: clientY - 32, // Offset to center the node on cursor
-		x: position.x - 32,
-        y: position.y - 32,
-      };
+	  const snappedPosition = { x: position.x - 32, y: position.y - 32 };
 
       let nodeData: any = {};
       let nodeId = '';
