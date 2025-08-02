@@ -129,14 +129,14 @@ export const GrafcetEditor = () => {
         }
       }
 
-      // Calculate position relative to ReactFlow container
+      // Calculate position relative to ReactFlow container without any offset
       const clientX = event.clientX - reactFlowBounds.left;
       const clientY = event.clientY - reactFlowBounds.top;
 
-      // Snap to grid
+      // Apply position directly without snapping for testing
       const snappedPosition = {
-        x: Math.round(clientX / snapGrid) * snapGrid,
-        y: Math.round(clientY / snapGrid) * snapGrid,
+        x: clientX - 32, // Offset to center the node on cursor
+        y: clientY - 32, // Offset to center the node on cursor
       };
 
       let nodeData: any = {};
