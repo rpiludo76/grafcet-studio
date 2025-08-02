@@ -147,8 +147,8 @@ export const GrafcetEditor = () => {
       }
 
       const position = reactFlowInstance.screenToFlowPosition({
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
+        x: event.clientX,
+        y: event.clientY,
       });
 	        
 
