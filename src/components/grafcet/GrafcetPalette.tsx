@@ -7,7 +7,7 @@ interface PaletteItemProps {
 }
 
 const PaletteItem = ({ type, children }: PaletteItemProps) => {
-const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   const onDragStart = (event: React.DragEvent, nodeType: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
@@ -16,6 +16,15 @@ const ref = useRef<HTMLDivElement>(null);
     const element = ref.current;
     if (element) {
       const rect = element.getBoundingClientRect();
+      event.dataTransfer.setData(
+        'application/reactflow/width',
+        rect.width.toString()
+      );
+      event.dataTransfer.setData(
+        'application/reactflow/height',
+        rect.height.toString()
+      );	  
+	  
       const clone = element.cloneNode(true) as HTMLElement;
       clone.style.position = 'absolute';
       clone.style.top = '-1000px';
