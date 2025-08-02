@@ -56,7 +56,7 @@ export const TransitionNode = memo(({ data, selected }: NodeProps) => {
       <div className="flex items-center">
         <div 
           className={cn(
-            "h-1 w-12 bg-grafcet-connection",
+            "h-0.5 w-6 bg-grafcet-connection",
             selected && "ring-2 ring-ring ring-offset-2"
           )}
         />

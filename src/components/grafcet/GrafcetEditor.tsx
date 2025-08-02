@@ -130,8 +130,8 @@ export const GrafcetEditor = () => {
       }
 
       const position = {
-        x: Math.round((event.clientX - reactFlowBounds.left - 50) / snapGrid) * snapGrid,
-        y: Math.round((event.clientY - reactFlowBounds.top - 50) / snapGrid) * snapGrid,
+        x: Math.round((event.clientX - reactFlowBounds.left) / snapGrid) * snapGrid,
+        y: Math.round((event.clientY - reactFlowBounds.top) / snapGrid) * snapGrid,
       };
 
       let nodeData: any = {};
@@ -261,7 +261,7 @@ export const GrafcetEditor = () => {
       const targetX = targetNode.position.x + 32; // center of step
       const targetY = targetNode.position.y; // top of step
       
-      const transitionX = (sourceX + targetX) / 2 - 30; // center minus half transition width
+      const transitionX = (sourceX + targetX) / 2 - 12; // center minus half transition width
       const transitionY = (sourceY + targetY) / 2 - 8; // center minus half transition height
       
       // Create transition node
