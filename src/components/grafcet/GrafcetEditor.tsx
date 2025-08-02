@@ -90,7 +90,8 @@ export const GrafcetEditor = () => {
   );
 
   const onKeyDown = useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Delete' || event.key === 'Backspace') {
+    //if (event.key === 'Delete' || event.key === 'Backspace') {
+	if (event.key === 'Delete') {
       setNodes((nds) => nds.filter((node) => !node.selected));
       setEdges((eds) => eds.filter((edge) => !edge.selected));
     }
@@ -126,16 +127,33 @@ export const GrafcetEditor = () => {
         return;
       }
 
-      const reactFlowBounds = wrapper.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
-      const widthStr = event.dataTransfer.getData('application/reactflow/width');
-      const heightStr = event.dataTransfer.getData('application/reactflow/height');
-      const elementWidth = widthStr ? parseFloat(widthStr) : 0;
-      const elementHeight = heightStr ? parseFloat(heightStr) : 0;
 
       if (typeof type === 'undefined' || !type) {
         return;
       }
+	  
+	  const nodeDimensions: Record<string, { width: number; height: number }> = {
+        step: { width: 64, height: 64 },
+        initialStep: { width: 64, height: 64 },
+        action: { width: 96, height: 48 },
+      };
+
+      const widthStr = event.dataTransfer.getData('application/reactflow/width');
+      const heightStr = event.dataTransfer.getData('application/reactflow/height');
+
+      const defaultSize = nodeDimensions[type] || { width: 0, height: 0 };
+      const parsedWidth = widthStr ? parseFloat(widthStr) : NaN;
+      const parsedHeight = heightStr ? parseFloat(heightStr) : NaN;
+
+      const elementWidth =
+        !isNaN(parsedWidth) && parsedWidth === defaultSize.width
+          ? parsedWidth
+          : defaultSize.width;
+      const elementHeight =
+        !isNaN(parsedHeight) && parsedHeight === defaultSize.height
+          ? parsedHeight
+          : defaultSize.height;
 
       // Check if trying to add multiple initial steps
       if (type === 'initialStep') {
@@ -146,10 +164,15 @@ export const GrafcetEditor = () => {
         }
       }
 
+      /*const position = reactFlowInstance.screenToFlowPosition({
+        x: event.clientX - reactFlowBounds.left,
+        y: event.clientY - reactFlowBounds.top,
+      });*/
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
-      });
+      });	  
+	  
 	        
 
       // Apply position directly 
