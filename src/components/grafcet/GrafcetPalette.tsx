@@ -81,7 +81,7 @@ export const GrafcetPalette = () => {
           </PaletteItem>
 
           <PaletteItem type="action">
-                        <div className="min-w-24 max-w-48 h-16 px-4 bg-grafcet-action text-grafcet-action-foreground border-2 border-grafcet-action flex items-center justify-center font-medium text-xs rounded-sm shadow-lg">
+                <div className="min-w-24 max-w-48 w-24 h-12  bg-grafcet-action text-grafcet-action-foreground border-2 border-grafcet-action flex items-center justify-center font-medium text-xs rounded-sm shadow-lg">
               Action
             </div>
           </PaletteItem>
