@@ -121,8 +121,8 @@ export const GrafcetEditor = () => {
         return;
       }
 
-      if (typeof reactFlowInstance.project !== 'function') {
-        toast.error("React Flow n'est pas prêt");
+      if (typeof reactFlowInstance.screenToFlowPosition !== 'function') {
+        toast.error("La conversion de coordonnées est indisponible");
         return;
       }
 
@@ -142,10 +142,11 @@ export const GrafcetEditor = () => {
         }
       }
 
-      const position = reactFlowInstance.project({
+      const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
+	        
 
       // Apply position directly 
 	  const snappedPosition = { x: position.x - 32, y: position.y - 32 };
