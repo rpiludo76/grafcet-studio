@@ -68,7 +68,7 @@ export const GrafcetEditor = () => {
       const targetNode = nodes.find(n => n.id === params.target);
       
       let edgeType = 'grafcet';
-      let animated = false;
+      const animated = false;
       
       // If connecting to action, force horizontal connection from right handle
       if (targetNode?.type === 'action') {
@@ -128,6 +128,10 @@ export const GrafcetEditor = () => {
 
       const reactFlowBounds = wrapper.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
+      const widthStr = event.dataTransfer.getData('application/reactflow/width');
+      const heightStr = event.dataTransfer.getData('application/reactflow/height');
+      const elementWidth = widthStr ? parseFloat(widthStr) : 0;
+      const elementHeight = heightStr ? parseFloat(heightStr) : 0;
 
       if (typeof type === 'undefined' || !type) {
         return;
@@ -149,9 +153,12 @@ export const GrafcetEditor = () => {
 	        
 
       // Apply position directly 
-	  const snappedPosition = { x: position.x - 32, y: position.y - 32 };
+      const snappedPosition = {
+        x: position.x - elementWidth / 2,
+        y: position.y - elementHeight / 2,
+      };
 
-      let nodeData: any = {};
+      let nodeData: Record<string, unknown> = {};
       let nodeId = '';
 
       if (type === 'step' || type === 'initialStep') {
@@ -218,7 +225,14 @@ export const GrafcetEditor = () => {
         // Update step counter to avoid conflicts
         const maxStepNumber = grafcetData.nodes
           .filter(node => node.type === 'step' || node.type === 'initialStep')
-          .reduce((max, node) => Math.max(max, (node.data as any)?.number || 0), 0);
+          .reduce(
+            (max, node) =>
+              Math.max(
+                max,
+                (node.data as { number?: number })?.number || 0
+              ),
+            0
+          );
         setStepCounter(maxStepNumber + 1);
         
         toast.success('GRAFCET chargé avec succès');
