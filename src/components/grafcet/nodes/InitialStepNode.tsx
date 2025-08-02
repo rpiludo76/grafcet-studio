@@ -62,7 +62,7 @@ export const InitialStepNode = memo(({ data, selected }: NodeProps) => {
       <div className="relative">
         <div
           className={cn(
-            "w-16 h-16 bg-grafcet-step-initial text-grafcet-step-initial-foreground border-4 border-grafcet-step-initial rounded-sm",
+            "w-12 h-12 bg-grafcet-step-initial text-grafcet-step-initial-foreground border-4 border-grafcet-step-initial rounded-sm",
             "flex items-center justify-center font-bold text-lg cursor-pointer",
             "drag-handle shadow-lg",
             selected && "ring-2 ring-ring ring-offset-2"
