@@ -383,6 +383,7 @@ export const GrafcetEditor = () => {
             snapToGrid={true}
             snapGrid={snapToGrid}
             connectionMode={ConnectionMode.Loose}
+            connectionLineType="smoothstep"
 
             attributionPosition="bottom-left"
             style={{ backgroundColor: 'hsl(var(--canvas-bg))' }}
