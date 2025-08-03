@@ -1,32 +1,33 @@
 import { memo, useState } from 'react';
-import { Handle, Position, NodeProps } from '@xyflow/react';
+import { NodeProps } from '@xyflow/react';
 import { cn } from '@/lib/utils';
 
-interface TransitionNodeData {
+export interface TransitionNodeData {
   condition?: string;
+  edgeId: string;
 }
 
-export const TransitionNode = memo(({ data, selected }: NodeProps) => {
+export const TransitionNode = memo(({ data, selected }: NodeProps<TransitionNodeData>) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState((data as any)?.condition || '');
+  const [editValue, setEditValue] = useState(data?.condition || '');
 
   const handleDoubleClick = () => {
     setIsEditing(true);
-    setEditValue((data as any)?.condition || '');
+    setEditValue(data?.condition || '');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      (data as any).condition = editValue;
+      data.condition = editValue;
       setIsEditing(false);
     } else if (e.key === 'Escape') {
       setIsEditing(false);
-      setEditValue((data as any)?.condition || '');
+      setEditValue(data?.condition || '');
     }
   };
 
   const handleBlur = () => {
-    (data as any).condition = editValue;
+    data.condition = editValue;
     setIsEditing(false);
   };
 
@@ -60,7 +61,7 @@ export const TransitionNode = memo(({ data, selected }: NodeProps) => {
               className="text-xs cursor-pointer px-1 py-0.5 hover:bg-accent rounded min-w-[80px] inline-block"
               onDoubleClick={handleDoubleClick}
             >
-              {(data as any)?.condition || 'Condition'}
+              {data?.condition || 'Condition'}
             </span>
           )}
         </div>
