@@ -2,7 +2,7 @@ import { memo } from 'react';
 import {
   BaseEdge,
   EdgeLabelRenderer,
-  getStraightPath,
+  getSmoothStepPath,
   EdgeProps,
 } from '@xyflow/react';
 
@@ -15,12 +15,17 @@ export const GrafcetEdge = memo(({
   style = {},
   markerEnd,
   data,
+  sourcePosition,
+  targetPosition,
 }: EdgeProps) => {
-  const [edgePath, labelX, labelY] = getStraightPath({
+  const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
     targetX,
     targetY,
+    sourcePosition,
+    targetPosition,
+    borderRadius: 0,
   });
 
   return (

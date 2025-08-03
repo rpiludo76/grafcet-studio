@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import {
   BaseEdge,
-  getStraightPath,
+  getSmoothStepPath,
   EdgeProps,
 } from '@xyflow/react';
 
@@ -13,12 +13,17 @@ export const HorizontalEdge = memo(({
   targetY,
   style = {},
   markerEnd,
+  sourcePosition,
+  targetPosition,
 }: EdgeProps) => {
-  const [edgePath] = getStraightPath({
+  const [edgePath] = getSmoothStepPath({
     sourceX,
     sourceY,
     targetX,
     targetY,
+    sourcePosition,
+    targetPosition,
+    borderRadius: 0,
   });
 
   return (
