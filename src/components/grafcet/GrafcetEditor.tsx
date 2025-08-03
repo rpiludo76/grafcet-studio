@@ -13,6 +13,8 @@ import {
   BackgroundVariant,
   ConnectionMode,
   useReactFlow,
+  NodeChange,
+  EdgeChange,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -21,7 +23,7 @@ import { GrafcetPalette } from './GrafcetPalette';
 import { StepNode } from './nodes/StepNode';
 import { InitialStepNode } from './nodes/InitialStepNode';
 import { ActionNode } from './nodes/ActionNode';
-import { TransitionNode } from './nodes/TransitionNode';
+import { TransitionNode, type TransitionNodeData } from './nodes/TransitionNode';
 import { GrafcetEdge } from './edges/GrafcetEdge';
 import { HorizontalEdge } from './edges/HorizontalEdge';
 import { toast } from 'sonner';
@@ -301,7 +303,81 @@ export const GrafcetEditor = () => {
     }
   }, []);
 
-  
+  const updateTransitionPositions = useCallback(() => {
+    setNodes((nds) => {
+      let changed = false;
+      const updated: Node[] = [];
+
+      nds.forEach((node) => {
+      if (node.type === 'transition') {
+          const { edgeId } = node.data as TransitionNodeData;
+          const edge = edges.find((e) => e.id === edgeId);
+          if (!edge) {
+            changed = true;
+            return;
+          }
+          const sourceNode = nds.find((n) => n.id === edge.source);
+          const targetNode = nds.find((n) => n.id === edge.target);
+          if (
+            !sourceNode ||
+            !targetNode ||
+            !['step', 'initialStep'].includes(sourceNode.type || '') ||
+            !['step', 'initialStep'].includes(targetNode.type || '')
+          ) {
+            changed = true;
+            return;
+          }
+          const sourceX = sourceNode.position.x + STEP_WIDTH / 2;
+          const sourceY = sourceNode.position.y + STEP_HEIGHT;
+          const targetX = targetNode.position.x + STEP_WIDTH / 2;
+          const targetY = targetNode.position.y;
+          const x = (sourceX + targetX) / 2 - 12;
+          const y = (sourceY + targetY) / 2 - 8;
+          if (node.position.x !== x || node.position.y !== y) {
+            changed = true;
+            updated.push({ ...node, position: { x, y } });
+          } else {
+            updated.push(node);
+          }
+        } else {
+          updated.push(node);
+        }
+      });
+
+      return changed ? updated : nds;
+    });
+  }, [edges, setNodes]);
+
+  const handleNodesChange = useCallback(
+    (changes: NodeChange[]) => {
+      onNodesChange(changes);
+    },
+    [onNodesChange]
+  );
+
+  const handleEdgesChange = useCallback(
+    (changes: EdgeChange[]) => {
+      onEdgesChange(changes);
+      const removedEdgeIds = changes
+        .filter((c) => c.type === 'remove')
+        .map((c) => c.id);
+      if (removedEdgeIds.length) {
+        setNodes((nds) =>
+          nds.filter(
+            (n) =>
+              n.type !== 'transition' ||
+              !removedEdgeIds.includes((n.data as TransitionNodeData).edgeId)
+          )
+        );
+      }
+    },
+    [onEdgesChange, setNodes]
+  );
+
+  useEffect(() => {
+    updateTransitionPositions();
+  }, [nodes, edges, updateTransitionPositions]);
+
   const onEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
     if (isCtrlPressed) {
       event.stopPropagation();
@@ -330,7 +406,7 @@ export const GrafcetEditor = () => {
         id: `transition-${transitionCounter}`,
         type: 'transition',
         position: { x: transitionX, y: transitionY },
-        data: { condition: '' },
+        data: { condition: '', edgeId: edge.id },
         dragHandle: '.drag-handle',
         selectable: true,
         draggable: true,
@@ -372,8 +448,8 @@ export const GrafcetEditor = () => {
           <ReactFlow
             nodes={nodes}
             edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
+            onNodesChange={handleNodesChange}
+            onEdgesChange={handleEdgesChange}
             onConnect={onConnect}
             onDrop={onDrop}
             onDragOver={onDragOver}
