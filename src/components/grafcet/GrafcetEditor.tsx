@@ -250,7 +250,20 @@ export const GrafcetEditor = () => {
     reader.onload = (e) => {
       try {
         const grafcetData: GrafcetData = JSON.parse(e.target?.result as string);
-        setNodes(grafcetData.nodes);
+        const nodesWithRatio = grafcetData.nodes.map((node) => {
+          if (node.type === 'transition') {
+            const data = node.data as TransitionNodeData;
+            return {
+              ...node,
+              data: {
+                ...data,
+                positionRatio: typeof data.positionRatio === 'number' ? data.positionRatio : 0.5,
+              },
+            };
+          }
+          return node;
+        });
+        setNodes(nodesWithRatio);
         setEdges(grafcetData.edges);
         
         // Update step counter to avoid conflicts
@@ -311,7 +324,7 @@ export const GrafcetEditor = () => {
 
       nds.forEach((node) => {
       if (node.type === 'transition') {
-          const { edgeId } = node.data as TransitionNodeData;
+          const { edgeId, positionRatio = 0.5 } = node.data as TransitionNodeData;
           const edge = edges.find((e) => e.id === edgeId);
           if (!edge) {
             changed = true;
@@ -332,8 +345,8 @@ export const GrafcetEditor = () => {
           const sourceY = sourceNode.position.y + STEP_HEIGHT;
           const targetX = targetNode.position.x + STEP_WIDTH / 2;
           const targetY = targetNode.position.y;
-          const x = (sourceX + targetX) / 2 - 12;
-          const y = (sourceY + targetY) / 2 - 8;
+          const x = sourceX + (targetX - sourceX) * positionRatio - 12;
+          const y = sourceY + (targetY - sourceY) * positionRatio - 8;
           if (node.position.x !== x || node.position.y !== y) {
             changed = true;
             updated.push({ ...node, position: { x, y } });
@@ -407,7 +420,7 @@ export const GrafcetEditor = () => {
         id: `transition-${transitionCounter}`,
         type: 'transition',
         position: { x: transitionX, y: transitionY},
-        data: { condition: '', edgeId: edge.id },
+        data: { condition: '', edgeId: edge.id, positionRatio: 0.5 },
         dragHandle: '.drag-handle',
         selectable: true,
         draggable: true,
