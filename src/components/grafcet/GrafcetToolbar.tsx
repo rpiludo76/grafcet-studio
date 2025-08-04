@@ -2,7 +2,6 @@ import { Save, FolderOpen, Image, Grid, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import {
   Popover,
   PopoverContent,
@@ -15,8 +14,6 @@ interface GrafcetToolbarProps {
   onExportImage: () => void;
   snapGrid: number;
   onSnapGridChange: (value: number) => void;
-  manualTransitionPlacement: boolean;
-  onManualTransitionPlacementChange: (value: boolean) => void;
 }
 
 export const GrafcetToolbar = ({
@@ -25,8 +22,6 @@ export const GrafcetToolbar = ({
   onExportImage,
   snapGrid,
   onSnapGridChange,
-  manualTransitionPlacement,
-  onManualTransitionPlacementChange,
 }: GrafcetToolbarProps) => {
   return (
     <div className="h-12 bg-toolbar-bg border-b border-border flex items-center justify-between px-4 shadow-sm">
@@ -103,21 +98,7 @@ export const GrafcetToolbar = ({
               </div>
             </div>
           </PopoverContent>
-        </Popover>
-
-        <div className="flex items-center space-x-2 pl-2 border-l border-border">
-          <Label htmlFor="transition-placement" className="text-sm">
-            Placement transitions
-          </Label>
-          <Switch
-            id="transition-placement"
-            checked={manualTransitionPlacement}
-            onCheckedChange={onManualTransitionPlacementChange}
-          />
-          <span className="text-sm text-muted-foreground">
-            {manualTransitionPlacement ? 'Manuel' : 'Auto'}
-          </span>
-        </div>
+         </Popover>
       </div>
     </div>
   );
