@@ -56,6 +56,7 @@ export const GrafcetEditor = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [snapGrid, setSnapGrid] = useState(20);
+  const [manualTransitionPlacement, setManualTransitionPlacement] = useState(false);
   const [stepCounter, setStepCounter] = useState(1);
   const [transitionCounter, setTransitionCounter] = useState(1);
   const [isCtrlPressed, setIsCtrlPressed] = useState(false);
@@ -405,7 +406,7 @@ export const GrafcetEditor = () => {
       const transitionNode: Node = {
         id: `transition-${transitionCounter}`,
         type: 'transition',
-        position: { x: transitionX, y: transitionY },
+        position: { x: transitionX, y: transitionY},
         data: { condition: '', edgeId: edge.id },
         dragHandle: '.drag-handle',
         selectable: true,
@@ -439,6 +440,8 @@ export const GrafcetEditor = () => {
         onExportImage={exportImage}
         snapGrid={snapGrid}
         onSnapGridChange={setSnapGrid}
+        manualTransitionPlacement={manualTransitionPlacement}
+        onManualTransitionPlacementChange={setManualTransitionPlacement}
       />
       
       <div className="flex flex-1 overflow-hidden">
