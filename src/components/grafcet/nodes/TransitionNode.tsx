@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils';
 export interface TransitionNodeData {
   condition?: string;
   edgeId: string;
-  positionRatio: number;
 }
 
 export const TransitionNode = memo(({ data, selected }: NodeProps<TransitionNodeData>) => {
