@@ -250,20 +250,7 @@ export const GrafcetEditor = () => {
     reader.onload = (e) => {
       try {
         const grafcetData: GrafcetData = JSON.parse(e.target?.result as string);
-        const nodesWithRatio = grafcetData.nodes.map((node) => {
-          if (node.type === 'transition') {
-            const data = node.data as TransitionNodeData;
-            return {
-              ...node,
-              data: {
-                ...data,
-                positionRatio: typeof data.positionRatio === 'number' ? data.positionRatio : 0.5,
-              },
-            };
-          }
-          return node;
-        });
-        setNodes(nodesWithRatio);
+        setNodes(grafcetData.nodes);
         setEdges(grafcetData.edges);
         
         // Update step counter to avoid conflicts
@@ -323,14 +310,13 @@ export const GrafcetEditor = () => {
       const updated: Node[] = [];
 
       nds.forEach((node) => {
-        if (node.type === 'transition') {
-          const { edgeId, positionRatio = 0.5 } = node.data as TransitionNodeData;
+      if (node.type === 'transition') {
+          const { edgeId } = node.data as TransitionNodeData;
           const edge = edges.find((e) => e.id === edgeId);
           if (!edge) {
             changed = true;
             return;
           }
-
           const sourceNode = nds.find((n) => n.id === edge.source);
           const targetNode = nds.find((n) => n.id === edge.target);
           if (
@@ -342,14 +328,12 @@ export const GrafcetEditor = () => {
             changed = true;
             return;
           }
-
           const sourceX = sourceNode.position.x + STEP_WIDTH / 2;
           const sourceY = sourceNode.position.y + STEP_HEIGHT;
           const targetX = targetNode.position.x + STEP_WIDTH / 2;
           const targetY = targetNode.position.y;
-          const ratio = manualTransitionPlacement ? positionRatio : 0.5;
-          const x = sourceX + (targetX - sourceX) * ratio - 12;
-          const y = sourceY + (targetY - sourceY) * ratio - 8;
+          const x = (sourceX + targetX) / 2 - 12;
+          const y = (sourceY + targetY) / 2 - 8;
           if (node.position.x !== x || node.position.y !== y) {
             changed = true;
             updated.push({ ...node, position: { x, y } });
@@ -363,63 +347,13 @@ export const GrafcetEditor = () => {
 
       return changed ? updated : nds;
     });
-  }, [edges, manualTransitionPlacement, setNodes]);
+  }, [edges, setNodes]);
 
   const handleNodesChange = useCallback(
     (changes: NodeChange[]) => {
-      const ratioUpdates: Record<string, number> = {};
-
-      const processedChanges = changes.map((change) => {
-        if (change.type === 'position') {
-          const node = nodes.find((n) => n.id === change.id);
-          if (node?.type === 'transition') {
-            const { edgeId } = node.data as TransitionNodeData;
-            const edge = edges.find((e) => e.id === edgeId);
-            const sourceNode = nodes.find((n) => n.id === edge?.source);
-            const targetNode = nodes.find((n) => n.id === edge?.target);
-            if (sourceNode && targetNode) {
-              const sourceX = sourceNode.position.x + STEP_WIDTH / 2;
-              const sourceY = sourceNode.position.y + STEP_HEIGHT;
-              const targetX = targetNode.position.x + STEP_WIDTH / 2;
-              const targetY = targetNode.position.y;
-              const dx = targetX - sourceX;
-              const dy = targetY - sourceY;
-              const lenSq = dx * dx + dy * dy;
-              const cx = (change.position?.x ?? node.position.x) + 12;
-              const cy = (change.position?.y ?? node.position.y) + 8;
-              let ratio = ((cx - sourceX) * dx + (cy - sourceY) * dy) / lenSq;
-              ratio = Math.min(1, Math.max(0, ratio));
-              const projX = sourceX + dx * ratio - 12;
-              const projY = sourceY + dy * ratio - 8;
-              ratioUpdates[change.id] = ratio;
-              return { ...change, position: { x: projX, y: projY } };
-            }
-          }
-        }
-        return change;
-      });
-
-      onNodesChange(processedChanges);
-
-      if (Object.keys(ratioUpdates).length) {
-        setNodes((nds) =>
-          nds.map((n) =>
-            ratioUpdates[n.id] !== undefined && n.type === 'transition'
-              ? {
-                  ...n,
-                  data: {
-                    ...(n.data as TransitionNodeData),
-                    positionRatio: ratioUpdates[n.id],
-                  },
-                }
-              : n
-          )
-        );
-      }
-
-      updateTransitionPositions();
+      onNodesChange(changes);
     },
-    [nodes, edges, onNodesChange, setNodes, updateTransitionPositions]
+    [onNodesChange]
   );
 
   const handleEdgesChange = useCallback(
@@ -443,7 +377,7 @@ export const GrafcetEditor = () => {
 
   useEffect(() => {
     updateTransitionPositions();
-  }, [nodes, edges, manualTransitionPlacement, updateTransitionPositions]);
+  }, [nodes, edges, updateTransitionPositions]);
 
   const onEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
     if (isCtrlPressed) {
@@ -458,31 +392,31 @@ export const GrafcetEditor = () => {
       if (!sourceNode || !targetNode) return;
       if (!['step', 'initialStep'].includes(sourceNode.type || '') || 
           !['step', 'initialStep'].includes(targetNode.type || '')) return;
-
+      
       // Calculate position at the middle of the edge
       const sourceX = sourceNode.position.x + STEP_WIDTH / 2; // center of step
       const sourceY = sourceNode.position.y + STEP_HEIGHT; // bottom of step
       const targetX = targetNode.position.x + STEP_WIDTH / 2; // center of step
       const targetY = targetNode.position.y; // top of step
-
+      
       const transitionX = (sourceX + targetX) / 2 - 12; // center minus half transition width
       const transitionY = (sourceY + targetY) / 2 - 8; // center minus half transition height
-
+      
       // Create transition node without handles
       const transitionNode: Node = {
         id: `transition-${transitionCounter}`,
         type: 'transition',
         position: { x: transitionX, y: transitionY},
-        data: { condition: '', edgeId: edge.id, positionRatio: 0.5 },
+        data: { condition: '', edgeId: edge.id },
         dragHandle: '.drag-handle',
         selectable: true,
         draggable: true,
       };
-
+      
       // Add transition node without modifying existing edges
       setNodes((nds) => [...nds, transitionNode]);
       setTransitionCounter(prev => prev + 1);
-
+      
       toast.success('Transition créée');
     }
   }, [isCtrlPressed, nodes, transitionCounter, setNodes]);
