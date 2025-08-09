@@ -1,6 +1,6 @@
 import { Square } from 'lucide-react';
 import { useRef, type ReactNode } from 'react';
-import { STEP_WIDTH, STEP_HEIGHT } from './constants';
+import { STEP_WIDTH, STEP_HEIGHT, DIVERGENCE_INITIAL_WIDTH } from './constants';
 
 interface PaletteItemProps {
   type: string;
@@ -92,7 +92,17 @@ export const GrafcetPalette = () => {
               className="min-w-24 max-w-48 w-24 bg-grafcet-action text-grafcet-action-foreground border-2 border-grafcet-action flex items-center justify-center font-medium text-xs rounded-sm shadow-lg"
               style={{ height: STEP_HEIGHT }}
               >
-			  Action
+                          Action
+            </div>
+          </PaletteItem>
+
+          <PaletteItem type="andDivergence">
+            <div
+              className="space-y-1"
+              style={{ width: DIVERGENCE_INITIAL_WIDTH }}
+            >
+              <div className="h-0.5 w-full bg-grafcet-connection" />
+              <div className="h-0.5 w-full bg-grafcet-connection" />
             </div>
           </PaletteItem>
         </div>

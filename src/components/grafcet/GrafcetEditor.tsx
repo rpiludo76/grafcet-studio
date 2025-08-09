@@ -24,16 +24,18 @@ import { StepNode } from './nodes/StepNode';
 import { InitialStepNode } from './nodes/InitialStepNode';
 import { ActionNode } from './nodes/ActionNode';
 import { TransitionNode, type TransitionNodeData } from './nodes/TransitionNode';
+import { AndDivergenceNode } from './nodes/AndDivergenceNode';
 import { GrafcetEdge } from './edges/GrafcetEdge';
 import { HorizontalEdge } from './edges/HorizontalEdge';
 import { toast } from 'sonner';
-import { STEP_WIDTH, STEP_HEIGHT } from './constants';
+import { STEP_WIDTH, STEP_HEIGHT, DIVERGENCE_INITIAL_WIDTH } from './constants';
 
 const nodeTypes = {
   step: StepNode,
   initialStep: InitialStepNode,
   action: ActionNode,
   transition: TransitionNode,
+  andDivergence: AndDivergenceNode,
 };
 
 const edgeTypes = {
@@ -69,12 +71,24 @@ export const GrafcetEditor = () => {
       // Determine edge type based on source and target positions
       const sourceNode = nodes.find(n => n.id === params.source);
       const targetNode = nodes.find(n => n.id === params.target);
+
+      if (!sourceNode || !targetNode) return;
+
+      // Prevent invalid connections involving AND divergence
+      const isStep = (n: Node | undefined) =>
+        ['step', 'initialStep'].includes(n?.type || '');
+      if (
+        (sourceNode.type === 'andDivergence' && !isStep(targetNode)) ||
+        (targetNode.type === 'andDivergence' && !isStep(sourceNode))
+      ) {
+        return;
+      }
       
       let edgeType = 'grafcet';
       const animated = false;
       
       // If connecting to action, force horizontal connection from right handle
-      if (targetNode?.type === 'action') {
+      if (targetNode.type === 'action') {
         edgeType = 'horizontal';
         // Override source handle to ensure right connection
         params.sourceHandle = 'right';
@@ -140,6 +154,7 @@ export const GrafcetEditor = () => {
         step: { width: STEP_WIDTH, height: STEP_HEIGHT },
         initialStep: { width: STEP_WIDTH, height: STEP_HEIGHT },
         action: { width: 96, height: STEP_HEIGHT },
+        andDivergence: { width: DIVERGENCE_INITIAL_WIDTH, height: 8 },
       };
 
       const widthStr = event.dataTransfer.getData('application/reactflow/width');
@@ -198,6 +213,9 @@ export const GrafcetEditor = () => {
       } else if (type === 'action') {
         nodeId = `action-${Date.now()}`;
         nodeData = { text: 'Action' };
+      } else if (type === 'andDivergence') {
+        nodeId = `andDivergence-${Date.now()}`;
+        nodeData = { width: DIVERGENCE_INITIAL_WIDTH };
       }
 
       const newNode: Node = {
@@ -209,7 +227,17 @@ export const GrafcetEditor = () => {
       };
 
       setNodes((nds) => nds.concat(newNode));
-      toast.success(`${type === 'initialStep' ? 'Étape initiale' : type === 'step' ? 'Étape' : 'Action'} ajoutée`);
+      toast.success(
+        `${
+          type === 'initialStep'
+            ? 'Étape initiale'
+            : type === 'step'
+              ? 'Étape'
+              : type === 'action'
+                ? 'Action'
+                : 'Divergence AND'
+        } ajoutée`
+      );
     },
     [nodes, stepCounter, setNodes, reactFlowInstance, snapGrid]
   );
