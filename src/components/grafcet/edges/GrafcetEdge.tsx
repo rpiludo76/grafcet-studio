@@ -18,15 +18,27 @@ export const GrafcetEdge = memo(({
   sourcePosition,
   targetPosition,
 }: EdgeProps) => {
-  const [edgePath, labelX, labelY] = getSmoothStepPath({
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
-    sourcePosition,
-    targetPosition,
-    borderRadius: 0,
-  });
+  const THRESHOLD = 5;
+
+  let edgePath: string;
+  let labelX: number;
+  let labelY: number;
+
+  if (Math.abs(sourceX - targetX) < THRESHOLD) {
+    edgePath = `M ${sourceX} ${sourceY} L ${targetX} ${targetY}`;
+    labelX = (sourceX + targetX) / 2;
+    labelY = (sourceY + targetY) / 2;
+  } else {
+    [edgePath, labelX, labelY] = getSmoothStepPath({
+      sourceX,
+      sourceY,
+      targetX,
+      targetY,
+      sourcePosition,
+      targetPosition,
+      borderRadius: 0,
+    });
+  }
 
   return (
     <>
