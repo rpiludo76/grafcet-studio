@@ -1,5 +1,5 @@
 import { memo, useState, useEffect } from 'react';
-import { Handle, Position, NodeProps, useReactFlow } from '@xyflow/react';
+import { Handle, Position, NodeProps, useUpdateNodeInternals } from '@xyflow/react';
 import { cn } from '@/lib/utils';
 import { DIVERGENCE_INITIAL_WIDTH } from '../constants';
 
@@ -8,7 +8,7 @@ interface AndDivergenceData {
 }
 
 export const AndDivergenceNode = memo(({ id, data, selected }: NodeProps<AndDivergenceData>) => {
-  const { updateNodeInternals } = useReactFlow();
+  const updateNodeInternals = useUpdateNodeInternals();
   const [width, setWidth] = useState(data?.width || DIVERGENCE_INITIAL_WIDTH);
 
   useEffect(() => {
