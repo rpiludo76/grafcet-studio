@@ -7,27 +7,28 @@ export interface TransitionNodeData {
   edgeId: string;
 }
 
-export const TransitionNode = memo(({ data, selected }: NodeProps<TransitionNodeData>) => {
+export const TransitionNode = memo(({ data, selected }: NodeProps) => {
+  const nodeData = (data || {}) as Partial<TransitionNodeData>;
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(data?.condition || '');
+  const [editValue, setEditValue] = useState(nodeData?.condition || '');
 
   const handleDoubleClick = () => {
     setIsEditing(true);
-    setEditValue(data?.condition || '');
+    setEditValue(nodeData?.condition || '');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      data.condition = editValue;
+      nodeData.condition = editValue;
       setIsEditing(false);
     } else if (e.key === 'Escape') {
       setIsEditing(false);
-      setEditValue(data?.condition || '');
+      setEditValue(nodeData?.condition || '');
     }
   };
 
   const handleBlur = () => {
-    data.condition = editValue;
+    nodeData.condition = editValue;
     setIsEditing(false);
   };
 
@@ -61,7 +62,7 @@ export const TransitionNode = memo(({ data, selected }: NodeProps<TransitionNode
               className="text-xs cursor-pointer px-1 py-0.5 hover:bg-accent rounded min-w-[80px] inline-block"
               onDoubleClick={handleDoubleClick}
             >
-              {data?.condition || 'Condition'}
+              {nodeData?.condition || 'Condition'}
             </span>
           )}
         </div>

@@ -12,6 +12,7 @@ import {
   Node,
   BackgroundVariant,
   ConnectionMode,
+  ConnectionLineType,
   useReactFlow,
   NodeChange,
   EdgeChange,
@@ -332,7 +333,7 @@ export const GrafcetEditor = () => {
           const targetX = targetNode.position.x + STEP_WIDTH / 2;
           const targetY = targetNode.position.y;
           const x = (sourceX + targetX) / 2 - 12;
-          const y = (sourceY + targetY) / 2 - 8;
+          const y = (sourceY + targetY) / 2 - 16;
           if (node.position.x !== x || node.position.y !== y) {
             changed = true;
             updated.push({ ...node, position: { x, y } });
@@ -399,7 +400,7 @@ export const GrafcetEditor = () => {
       const targetY = targetNode.position.y; // top of step
       
       const transitionX = (sourceX + targetX) / 2 - 12; // center minus half transition width
-      const transitionY = (sourceY + targetY) / 2 - 8; // center minus half transition height
+      const transitionY = (sourceY + targetY) / 2 - 16; // center minus half transition height, adjusted upward
       
       // Create transition node without handles
       const transitionNode: Node = {
@@ -459,7 +460,7 @@ export const GrafcetEditor = () => {
             snapToGrid={true}
             snapGrid={snapToGrid}
             connectionMode={ConnectionMode.Loose}
-            connectionLineType="smoothstep"
+            connectionLineType={ConnectionLineType.SmoothStep}
 
             attributionPosition="bottom-left"
             style={{ backgroundColor: 'hsl(var(--canvas-bg))' }}

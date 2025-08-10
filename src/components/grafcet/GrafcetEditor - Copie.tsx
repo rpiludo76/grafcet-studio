@@ -12,6 +12,7 @@ import {
   Node,
   BackgroundVariant,
   ConnectionMode,
+  ConnectionLineType,
   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -323,7 +324,7 @@ export const GrafcetEditor = () => {
       const targetY = targetNode.position.y; // top of step
       
       const transitionX = (sourceX + targetX) / 2 - 12; // center minus half transition width
-      const transitionY = (sourceY + targetY) / 2 - 8; // center minus half transition height
+      const transitionY = (sourceY + targetY) / 2 - 16; // center minus half transition height
       
       // Create transition node without handles
       const transitionNode: Node = {
@@ -383,7 +384,7 @@ export const GrafcetEditor = () => {
             snapToGrid={true}
             snapGrid={snapToGrid}
             connectionMode={ConnectionMode.Loose}
-            connectionLineType="smoothstep"
+            connectionLineType={ConnectionLineType.SmoothStep}
 
             attributionPosition="bottom-left"
             style={{ backgroundColor: 'hsl(var(--canvas-bg))' }}
