@@ -332,8 +332,8 @@ export const GrafcetEditor = () => {
           const sourceY = sourceNode.position.y + STEP_HEIGHT;
           const targetX = targetNode.position.x + STEP_WIDTH / 2;
           const targetY = targetNode.position.y;
-          const x = (sourceX + targetX) / 2 - 12;
-          const y = (sourceY + targetY) / 2 - 16;
+          const x = targetX - 12;
+          const y = targetY - 16;
           if (node.position.x !== x || node.position.y !== y) {
             changed = true;
             updated.push({ ...node, position: { x, y } });
@@ -393,14 +393,14 @@ export const GrafcetEditor = () => {
       if (!['step', 'initialStep'].includes(sourceNode.type || '') || 
           !['step', 'initialStep'].includes(targetNode.type || '')) return;
       
-      // Calculate position at the middle of the edge
+      // Position anchored to the lower (target) step
       const sourceX = sourceNode.position.x + STEP_WIDTH / 2; // center of step
       const sourceY = sourceNode.position.y + STEP_HEIGHT; // bottom of step
       const targetX = targetNode.position.x + STEP_WIDTH / 2; // center of step
       const targetY = targetNode.position.y; // top of step
       
-      const transitionX = (sourceX + targetX) / 2 - 12; // center minus half transition width
-      const transitionY = (sourceY + targetY) / 2 - 16; // center minus half transition height, adjusted upward
+      const transitionX = targetX - 12; // centered horizontally on target step
+      const transitionY = targetY - 16; // slightly above the target step
       
       // Create transition node without handles
       const transitionNode: Node = {
