@@ -12,7 +12,6 @@ import {
   Node,
   BackgroundVariant,
   ConnectionMode,
-  ConnectionLineType,
   useReactFlow,
   NodeChange,
   EdgeChange,
@@ -87,7 +86,6 @@ export const GrafcetEditor = () => {
         type: edgeType,
         animated,
         style: { stroke: 'hsl(var(--grafcet-connection))' },
-        data: { grid: snapGrid },
       };
       setEdges((eds) => addEdge(edge, eds));
     },
@@ -465,7 +463,7 @@ export const GrafcetEditor = () => {
             snapToGrid={true}
             snapGrid={snapToGrid}
             connectionMode={ConnectionMode.Loose}
-            connectionLineType={ConnectionLineType.SmoothStep}
+            connectionLineType="smoothstep"
 
             attributionPosition="bottom-left"
             style={{ backgroundColor: 'hsl(var(--canvas-bg))' }}
