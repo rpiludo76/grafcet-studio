@@ -86,6 +86,7 @@ export const GrafcetEditor = () => {
         type: edgeType,
         animated,
         style: { stroke: 'hsl(var(--grafcet-connection))' },
+        ...(edgeType === 'grafcet' ? { data: { double: false } } : {}),
       };
       setEdges((eds) => addEdge(edge, eds));
     },
@@ -463,7 +464,8 @@ export const GrafcetEditor = () => {
             snapToGrid={true}
             snapGrid={snapToGrid}
             connectionMode={ConnectionMode.Loose}
-            connectionLineType="smoothstep"
+            //connectionLineType="smoothstep"
+			connectionLineType="step"
 
             attributionPosition="bottom-left"
             style={{ backgroundColor: 'hsl(var(--canvas-bg))' }}
