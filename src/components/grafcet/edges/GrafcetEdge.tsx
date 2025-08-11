@@ -46,11 +46,13 @@ export const GrafcetEdge = memo(({
   interface EdgeData {
     grid?: number;
     centerY?: number;
+	double?: boolean;
   }
 
   // Grid for snapping (fallback to 20 if not provided in edge data)
   const edgeData = data as EdgeData;
   const grid = edgeData?.grid ?? 20;
+  const isDouble = edgeData?.double ?? false;
 
   const defaultCenterY = useMemo(
     () => Math.round(((sourceY + targetY) / 2) / grid) * grid,
@@ -104,6 +106,22 @@ export const GrafcetEdge = memo(({
     window.addEventListener('mouseup', onUp);
   }, [id, grid, screenToFlowPosition, setEdges, sourceY, targetY, isAltPressed]);
 
+  const handleDoubleClick = useCallback(() => {
+    setEdges((eds) =>
+      eds.map((ed) =>
+        ed.id === id
+          ? {
+              ...ed,
+              data: {
+                ...(ed.data || {}),
+                double: !((ed.data as EdgeData)?.double),
+              },
+            }
+          : ed
+      )
+    );
+  }, [id, setEdges]);
+
   return (
     <>
       <BaseEdge
@@ -112,10 +130,24 @@ export const GrafcetEdge = memo(({
         markerEnd={markerEnd}
         style={{
           stroke: 'hsl(var(--grafcet-connection))',
-          strokeWidth: 2,
+          strokeWidth: isDouble ? 4 : 2,
+          pointerEvents: 'stroke',
           ...style,
         }}
+        onDoubleClick={handleDoubleClick}
       />
+
+      {isDouble && (
+        <BaseEdge
+          id={`${id}-double`}
+          path={edgePath}
+          style={{
+            stroke: 'hsl(var(--background))',
+            strokeWidth: 2,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
 
       {/* Drag handle to reposition the horizontal segment */}
       {isAltPressed && (
