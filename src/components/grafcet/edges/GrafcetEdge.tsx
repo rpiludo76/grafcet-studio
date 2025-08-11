@@ -130,7 +130,7 @@ export const GrafcetEdge = memo(({
         markerEnd={markerEnd}
         style={{
           stroke: 'hsl(var(--grafcet-connection))',
-          strokeWidth: isDouble ? 4 : 2,
+          strokeWidth: isDouble ? 6 : 2,
           pointerEvents: 'stroke',
           ...style,
         }}
