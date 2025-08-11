@@ -65,7 +65,7 @@ export const HorizontalEdge = memo(({
         onDoubleClick={handleDoubleClick}
         style={{
           stroke: 'hsl(var(--grafcet-connection))',
-          strokeWidth: isDouble ? 4 : 2,
+          strokeWidth: isDouble ? 6 : 2,
           pointerEvents: 'stroke',
           ...style,
         }}
@@ -73,3 +73,4 @@ export const HorizontalEdge = memo(({
     </>
   );
 });
+
