@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo, useEffect, useState } from 'react';
 import {
   BaseEdge,
   EdgeLabelRenderer,
@@ -19,15 +19,45 @@ export const GrafcetEdge = memo(({
 }: EdgeProps) => {
   const { setEdges, screenToFlowPosition } = useReactFlow();
 
+  const [isAltPressed, setIsAltPressed] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Alt') {
+        setIsAltPressed(true);
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Alt') {
+        setIsAltPressed(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  interface EdgeData {
+    grid?: number;
+    centerY?: number;
+  }
+
   // Grid for snapping (fallback to 20 if not provided in edge data)
-  const grid = (data as any)?.grid ?? 20;
+  const edgeData = data as EdgeData;
+  const grid = edgeData?.grid ?? 20;
 
   const defaultCenterY = useMemo(
     () => Math.round(((sourceY + targetY) / 2) / grid) * grid,
     [sourceY, targetY, grid]
   );
 
-  const centerY = (data as any)?.centerY ?? defaultCenterY;
+  const centerY = edgeData?.centerY ?? defaultCenterY;
 
   // Build orthogonal path: vertical -> horizontal (draggable) -> vertical
   const edgePath = useMemo(() => {
@@ -40,6 +70,10 @@ export const GrafcetEdge = memo(({
   const onDragStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+	
+	if (!(e.altKey || isAltPressed)) {
+      return;
+    }
 
     const onMove = (ev: MouseEvent) => {
       const p = screenToFlowPosition({ x: ev.clientX, y: ev.clientY });
@@ -68,7 +102,7 @@ export const GrafcetEdge = memo(({
 
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
-  }, [id, grid, screenToFlowPosition, setEdges, sourceY, targetY]);
+  }, [id, grid, screenToFlowPosition, setEdges, sourceY, targetY, isAltPressed]);
 
   return (
     <>
@@ -84,19 +118,21 @@ export const GrafcetEdge = memo(({
       />
 
       {/* Drag handle to reposition the horizontal segment */}
-      <EdgeLabelRenderer>
-        <div
-          className="absolute z-[1] nodrag nopan cursor-ns-resize rounded-full border bg-background shadow"
-          style={{
-            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
-            width: 14,
-            height: 14,
-            borderColor: 'hsl(var(--border))',
-          }}
-          onMouseDown={onDragStart}
-          aria-label="Déplacer la branche horizontale"
-        />
-      </EdgeLabelRenderer>
+      {isAltPressed && (
+        <EdgeLabelRenderer>
+          <div
+            className="absolute z-[1] nodrag nopan cursor-ns-resize rounded-full border bg-background shadow"
+            style={{
+              transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
+              width: 14,
+              height: 14,
+              borderColor: 'hsl(var(--border))',
+            }}
+            onMouseDown={onDragStart}
+            aria-label="Déplacer la branche horizontale"
+          />
+        </EdgeLabelRenderer>
+      )}
     </>
   );
 });
