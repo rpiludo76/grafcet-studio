@@ -144,8 +144,9 @@ export const GrafcetEdge = memo(({
           style={{
             stroke: 'hsl(var(--background))',
             strokeWidth: 2,
-            pointerEvents: 'none',
+            pointerEvents: 'stroke',
           }}
+		  onDoubleClick={handleDoubleClick}
         />
       )}
 
