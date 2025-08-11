@@ -44,20 +44,10 @@ export const HorizontalEdge = memo(({
     borderRadius: 0,
   });
 
+	console.log(isDouble);
+
   return (
     <>
-      {isDouble && (
-        <BaseEdge
-          id={`${id}-overlay`}
-          path={edgePath}
-          onDoubleClick={handleDoubleClick}
-          style={{
-            stroke: 'hsl(var(--background))',
-            strokeWidth: 2,
-            pointerEvents: 'stroke',
-          }}
-        />
-      )}
       <BaseEdge
         id={id}
         path={edgePath}
@@ -70,7 +60,18 @@ export const HorizontalEdge = memo(({
           ...style,
         }}
       />
+      {isDouble && (
+        <BaseEdge
+          id={`${id}-overlay`}
+          path={edgePath}
+          onDoubleClick={handleDoubleClick}
+          style={{
+            stroke: 'hsl(var(--background))',
+            strokeWidth: 6,
+            pointerEvents: 'stroke',
+          }}
+        />
+      )}
     </>
   );
 });
-
