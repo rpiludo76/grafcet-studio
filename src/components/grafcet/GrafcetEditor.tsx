@@ -62,6 +62,23 @@ export const GrafcetEditor = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const reactFlowInstance = useReactFlow();
 
+  useEffect(() => {
+    const needsUpdate = edges.some(
+      (e) => (e.data as { double?: boolean })?.double === undefined,
+    );
+    if (needsUpdate) {
+      setEdges((eds) =>
+        eds.map((e) => ({
+          ...e,
+          data: {
+            ...(e.data ?? {}),
+            double: (e.data as { double?: boolean })?.double ?? false,
+          },
+        })),
+      );
+    }
+  }, [edges, setEdges]);
+
   const snapToGrid = useMemo(() => [snapGrid, snapGrid] as [number, number], [snapGrid]);
 
   const onConnect = useCallback(
@@ -74,7 +91,7 @@ export const GrafcetEditor = () => {
       const animated = false;
       
       // If connecting to action, force horizontal connection from right handle
-      if (targetNode?.type === 'action') {
+       if (targetNode?.type === 'action') {
         edgeType = 'horizontal';
         // Override source handle to ensure right connection
         params.sourceHandle = 'right';
@@ -86,7 +103,8 @@ export const GrafcetEditor = () => {
         type: edgeType,
         animated,
         style: { stroke: 'hsl(var(--grafcet-connection))' },
-        ...(edgeType === 'grafcet' ? { data: { double: false } } : {}),
+		data: { double: false },
+        //...(edgeType === 'grafcet' ? { data: { double: false } } : {}),
       };
       setEdges((eds) => addEdge(edge, eds));
     },
