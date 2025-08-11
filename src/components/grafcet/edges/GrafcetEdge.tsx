@@ -127,6 +127,7 @@ export const GrafcetEdge = memo(({
               width: 14,
               height: 14,
               borderColor: 'hsl(var(--border))',
+			  pointerEvents: 'all',
             }}
             onMouseDown={onDragStart}
             aria-label="Déplacer la branche horizontale"
