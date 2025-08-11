@@ -62,22 +62,6 @@ export const GrafcetEditor = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const reactFlowInstance = useReactFlow();
 
-  useEffect(() => {
-    const needsUpdate = edges.some(
-      (e) => (e.data as { double?: boolean })?.double === undefined,
-    );
-    if (needsUpdate) {
-      setEdges((eds) =>
-        eds.map((e) => ({
-          ...e,
-          data: {
-            ...(e.data ?? {}),
-            double: (e.data as { double?: boolean })?.double ?? false,
-          },
-        })),
-      );
-    }
-  }, [edges, setEdges]);
 
   const snapToGrid = useMemo(() => [snapGrid, snapGrid] as [number, number], [snapGrid]);
 
@@ -103,8 +87,6 @@ export const GrafcetEditor = () => {
         type: edgeType,
         animated,
         style: { stroke: 'hsl(var(--grafcet-connection))' },
-		data: { double: false },
-        //...(edgeType === 'grafcet' ? { data: { double: false } } : {}),
       };
       setEdges((eds) => addEdge(edge, eds));
     },
