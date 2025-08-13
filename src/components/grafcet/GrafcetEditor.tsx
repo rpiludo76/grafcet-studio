@@ -191,7 +191,10 @@ export const GrafcetEditor = () => {
       let nodeData: Record<string, unknown> = {};
       let nodeId = '';
 
-      if (type === 'step' || type === 'initialStep') {
+      if (type === 'initialStep') {
+        nodeId = `step-0`;
+        nodeData = { number: 0, label: 'Étape initiale 0' };
+      } else if (type === 'step') {
         nodeId = `step-${stepCounter}`;
         nodeData = { number: stepCounter, label: `Étape ${stepCounter}` };
         setStepCounter(prev => prev + 1);
