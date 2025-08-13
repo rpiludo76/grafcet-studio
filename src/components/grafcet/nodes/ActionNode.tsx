@@ -38,7 +38,7 @@ export const ActionNode = memo(({ data, selected }: NodeProps) => {
         type="target"
         position={Position.Left}
         className={cn(
-          "w-3 h-3 !bg-grafcet-action border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity z-10",
+          "w-3 h-3 !bg-transparent border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity z-0",
           "!-left-2 !top-1/2 !transform !-translate-y-1/2"
         )}
       />

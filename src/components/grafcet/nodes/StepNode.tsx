@@ -43,7 +43,7 @@ export const StepNode = memo(({ data, selected }: NodeProps) => {
         type="target"
         position={Position.Top}
         className={cn(
-          "w-3 h-3 !bg-grafcet-step border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity z-10",
+          "w-3 h-3 !bg-transparent border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity z-0",
           "!-top-2 !left-1/2 !transform !-translate-x-1/2"
         )}
       />
@@ -51,7 +51,7 @@ export const StepNode = memo(({ data, selected }: NodeProps) => {
         type="source"
         position={Position.Bottom}
         className={cn(
-          "w-3 h-3 !bg-grafcet-step border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity z-10",
+          "w-3 h-3 !bg-transparent border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity z-0",
           "!-bottom-2 !left-1/2 !transform !-translate-x-1/2"
         )}
       />
@@ -62,7 +62,7 @@ export const StepNode = memo(({ data, selected }: NodeProps) => {
         position={Position.Right}
         id="right"
         className={cn(
-          "w-3 h-3 !bg-grafcet-step border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity z-10",
+          "w-3 h-3 !bg-transparent border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity z-0",
           "!-right-2 !top-1/2 !transform !-translate-y-1/2"
         )}
       />

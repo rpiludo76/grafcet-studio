@@ -6,8 +6,11 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 
+// Actual diameter of connection handles in pixels
+const HANDLE_DIAMETER = 16;
+
 // Draggable orthogonal Grafcet edge with adjustable horizontal branch (centerY)
-export const GrafcetEdge = memo(({
+export const GrafcetEdge = memo(({ 
   id,
   sourceX,
   sourceY,
@@ -18,6 +21,10 @@ export const GrafcetEdge = memo(({
   data,
 }: EdgeProps) => {
   const { setEdges, screenToFlowPosition } = useReactFlow();
+
+  // Adjust Y coordinates to start/end at node borders instead of handle centers
+  const srcY = sourceY - HANDLE_DIAMETER;
+  const tgtY = targetY + HANDLE_DIAMETER;
 
   const [isAltPressed, setIsAltPressed] = useState(false);
 
@@ -53,16 +60,16 @@ export const GrafcetEdge = memo(({
   const grid = edgeData?.grid ?? 20;
 
   const defaultCenterY = useMemo(
-    () => Math.round(((sourceY + targetY) / 2) / grid) * grid,
-    [sourceY, targetY, grid]
+    () => Math.round(((srcY + tgtY) / 2) / grid) * grid,
+    [srcY, tgtY, grid]
   );
 
   const centerY = edgeData?.centerY ?? defaultCenterY;
 
   // Build orthogonal path: vertical -> horizontal (draggable) -> vertical
   const edgePath = useMemo(() => {
-    return `M ${sourceX} ${sourceY} L ${sourceX} ${centerY} L ${targetX} ${centerY} L ${targetX} ${targetY}`;
-  }, [sourceX, sourceY, targetX, targetY, centerY]);
+    return `M ${sourceX} ${srcY} L ${sourceX} ${centerY} L ${targetX} ${centerY} L ${targetX} ${tgtY}`;
+  }, [sourceX, srcY, targetX, tgtY, centerY]);
 
   const labelX = useMemo(() => (sourceX + targetX) / 2, [sourceX, targetX]);
   const labelY = centerY;
@@ -78,8 +85,8 @@ export const GrafcetEdge = memo(({
     const onMove = (ev: MouseEvent) => {
       const p = screenToFlowPosition({ x: ev.clientX, y: ev.clientY });
       // Snap to grid on Y axis only and clamp between source/target
-      const minY = Math.min(sourceY, targetY) + 2;
-      const maxY = Math.max(sourceY, targetY) - 2;
+      const minY = Math.min(srcY, tgtY) + 2;
+      const maxY = Math.max(srcY, tgtY) - 2;
       let newY = Math.round(p.y / grid) * grid;
       newY = Math.max(Math.min(newY, maxY), minY);
 
@@ -102,7 +109,7 @@ export const GrafcetEdge = memo(({
 
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
-  }, [id, grid, screenToFlowPosition, setEdges, sourceY, targetY, isAltPressed]);
+  }, [id, grid, screenToFlowPosition, setEdges, srcY, tgtY, isAltPressed]);
 
   return (
     <>
