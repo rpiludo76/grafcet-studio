@@ -14,7 +14,7 @@ All colors MUST be HSL.
     /* GRAFCET specific colors */
     --grafcet-step: 50 20% 80%;
     --grafcet-step-foreground: 0 0% 0%;
-    --grafcet-step-initial: 60 100% 50%;
+    --grafcet-step-initial: 0 0% 100%;
     --grafcet-step-initial-foreground: 0 0% 0%;
     --grafcet-action: 50 25% 60%;
     --grafcet-action-foreground: 0 0% 0%;
@@ -48,7 +48,8 @@ All colors MUST be HSL.
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
+    --border: 255 10% 30%;
+	/*--border: 214.3 31.8% 91.4%;*/
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
@@ -78,7 +79,7 @@ All colors MUST be HSL.
     /* GRAFCET dark mode colors */
     --grafcet-step: 220 70% 60%;
     --grafcet-step-foreground: 0 0% 0%;
-    --grafcet-step-initial: 35 90% 60%;
+    --grafcet-step-initial: 0 0% 100%;
     --grafcet-step-initial-foreground: 0 0% 0%;
     --grafcet-action: 270 60% 60%;
     --grafcet-action-foreground: 0 0% 0%;
