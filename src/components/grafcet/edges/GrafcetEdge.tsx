@@ -111,6 +111,7 @@ export const GrafcetEdge = memo(({
         path={edgePath}
         markerEnd={markerEnd}
         style={{
+          zIndex: 0,
           stroke: 'hsl(var(--grafcet-connection))',
           strokeWidth: 2,
           pointerEvents: 'stroke',
