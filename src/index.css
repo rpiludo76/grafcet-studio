@@ -12,7 +12,7 @@ All colors MUST be HSL.
     --foreground: 210 15% 20%;
     
     /* GRAFCET specific colors */
-    --grafcet-step: 50 20% 80%;
+    --grafcet-step: 0 0% 100%;
     --grafcet-step-foreground: 0 0% 0%;
     --grafcet-step-initial: 0 0% 100%;
     --grafcet-step-initial-foreground: 0 0% 0%;
@@ -77,7 +77,7 @@ All colors MUST be HSL.
     --foreground: 210 40% 95%;
     
     /* GRAFCET dark mode colors */
-    --grafcet-step: 220 70% 60%;
+    --grafcet-step: 0 0% 100%;
     --grafcet-step-foreground: 0 0% 0%;
     --grafcet-step-initial: 0 0% 100%;
     --grafcet-step-initial-foreground: 0 0% 0%;
