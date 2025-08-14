@@ -1,6 +1,9 @@
 import { memo } from 'react';
 import { BaseEdge, getSmoothStepPath, EdgeProps } from '@xyflow/react';
 
+// Actual diameter of connection handles in pixels
+const HANDLE_DIAMETER = 16;
+
 export const HorizontalEdge = memo(({
   id,
   sourceX,
@@ -11,16 +14,20 @@ export const HorizontalEdge = memo(({
   markerEnd,
   sourcePosition,
   targetPosition,
-}: EdgeProps) => {
-  const [edgePath] = getSmoothStepPath({
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
-    sourcePosition,
-    targetPosition,
-    borderRadius: 0,
-  });
+  }: EdgeProps) => {
+    // Adjust X coordinates to start/end at node borders instead of handle centers
+    const srcX = sourceX - HANDLE_DIAMETER;
+    const tgtX = targetX + HANDLE_DIAMETER;
+
+    const [edgePath] = getSmoothStepPath({
+      sourceX: srcX,
+      sourceY,
+      targetX: tgtX,
+      targetY,
+      sourcePosition,
+      targetPosition,
+      borderRadius: 0,
+    });
 
   return (
     <BaseEdge
