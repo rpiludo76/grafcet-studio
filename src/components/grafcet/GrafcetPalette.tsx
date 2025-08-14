@@ -69,7 +69,7 @@ export const GrafcetPalette = () => {
           <PaletteItem type="initialStep">
             <div className="relative">
                             <div
-                className="bg-white text-grafcet-step-initial-foreground border-2 border-black rounded-sm flex items-center justify-center font-bold text-sm shadow-lg"
+                className="bg-white text-grafcet-step-initial-foreground border-4 border-black border-double rounded-sm flex items-center justify-center font-bold text-sm shadow-lg"
                 style={{ width: STEP_WIDTH, height: STEP_HEIGHT }}
               >
 			    0
