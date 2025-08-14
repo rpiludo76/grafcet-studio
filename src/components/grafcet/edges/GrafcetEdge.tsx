@@ -6,6 +6,8 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 
+import { SELECTED_LINK_COLOR } from '../constants';
+
 // Actual diameter of connection handles in pixels
 const HANDLE_DIAMETER = 16;
 
@@ -19,6 +21,7 @@ export const GrafcetEdge = memo(({
   style = {},
   markerEnd,
   data,
+  selected,
 }: EdgeProps) => {
   const { setEdges, screenToFlowPosition } = useReactFlow();
 
@@ -125,6 +128,10 @@ export const GrafcetEdge = memo(({
           strokeWidth: 2,
           pointerEvents: 'stroke',
           ...style,
+          ...(selected && {
+            stroke: SELECTED_LINK_COLOR,
+            strokeDasharray: '4 4',
+          }),
         }}
       />
 

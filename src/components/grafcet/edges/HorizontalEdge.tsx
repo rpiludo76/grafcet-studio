@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { BaseEdge, getSmoothStepPath, EdgeProps } from '@xyflow/react';
+import { SELECTED_LINK_COLOR } from '../constants';
 
 // Actual diameter of connection handles in pixels
 const HANDLE_DIAMETER = 16;
@@ -14,6 +15,7 @@ export const HorizontalEdge = memo(({
   markerEnd,
   sourcePosition,
   targetPosition,
+  selected,
   }: EdgeProps) => {
     // Adjust X coordinates to start/end at node borders instead of handle centers
     const srcX = sourceX - HANDLE_DIAMETER;
@@ -40,6 +42,10 @@ export const HorizontalEdge = memo(({
         strokeWidth: 2,
         pointerEvents: 'stroke',
         ...style,
+        ...(selected && {
+          stroke: SELECTED_LINK_COLOR,
+          strokeDasharray: '4 4',
+        }),
       }}
     />
   );
