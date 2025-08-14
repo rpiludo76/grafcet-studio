@@ -16,7 +16,7 @@ All colors MUST be HSL.
     --grafcet-step-foreground: 0 0% 0%;
     --grafcet-step-initial: 0 0% 100%;
     --grafcet-step-initial-foreground: 0 0% 0%;
-    --grafcet-action: 50 25% 60%;
+    --grafcet-action: 0 0% 100%;
     --grafcet-action-foreground: 0 0% 0%;
     --grafcet-connection: 210 15% 30%;
     --grafcet-grid: 210 15% 85%;
