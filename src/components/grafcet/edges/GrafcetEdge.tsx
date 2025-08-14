@@ -25,6 +25,8 @@ export const GrafcetEdge = memo(({
   // Adjust Y coordinates to start/end at node borders instead of handle centers
   const srcY = sourceY - HANDLE_DIAMETER;
   const tgtY = targetY + HANDLE_DIAMETER;
+  const srcX = sourceX - HANDLE_DIAMETER;
+  const tgtX = targetX + HANDLE_DIAMETER;
 
   const [isAltPressed, setIsAltPressed] = useState(false);
 
