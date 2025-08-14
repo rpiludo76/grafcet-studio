@@ -63,10 +63,10 @@ export const InitialStepNode = memo(({ data, selected }: NodeProps) => {
       <div className="relative">
         <div
           className={cn(
-            "bg-white text-grafcet-step-initial-foreground border-4 border-black rounded-sm",
+            "bg-white text-grafcet-step-initial-foreground border-2 border-black rounded-sm",
             "flex items-center justify-center font-bold text-lg cursor-pointer",
             "drag-handle shadow-lg",
-            selected && "ring-2 ring-ring ring-offset-2"
+            selected && "border-2 border-red-400 border-dashed"
           )}
 		  style={{ width: STEP_WIDTH, height: STEP_HEIGHT }}
           onDoubleClick={handleDoubleClick}

@@ -49,7 +49,7 @@ export const ActionNode = memo(({ data, selected }: NodeProps) => {
           "min-w-24 max-w-48 w-24 bg-grafcet-action text-grafcet-action-foreground border-2 border-black",
           "flex items-center justify-center font-medium text-sm cursor-pointer",
           "drag-handle shadow-lg rounded-sm",
-          selected && "ring-2 ring-ring ring-offset-2"
+          selected && "border-2 border-red-400 border-dashed"
         )}
 		style={{ height: STEP_HEIGHT }}
         onDoubleClick={handleDoubleClick}

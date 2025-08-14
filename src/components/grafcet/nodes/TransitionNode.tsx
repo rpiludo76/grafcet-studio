@@ -39,7 +39,7 @@ export const TransitionNode = memo(({ data, selected }: NodeProps<TransitionNode
         <div 
           className={cn(
             "h-0.5 w-6 bg-grafcet-connection",
-            selected && "ring-2 ring-ring ring-offset-2"
+            selected && "border-2 border-red-400 border-dashed"
           )}
         />
         
