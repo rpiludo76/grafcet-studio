@@ -57,11 +57,11 @@ export const GrafcetPalette = () => {
       <div className="space-y-6">
         <div>
           <h2 className="text-sm font-semibold text-foreground mb-3 flex items-center">
-            <Square className="w-4 h-4 mr-2" />
-            Palette d'objets
+            <Square className="w-3 h-3 mr-2" />
+            Objets
           </h2>
           <p className="text-xs text-muted-foreground mb-4">
-            Glissez-déposez les objets sur la zone de création
+            Glissez-déposez les objets sur la page
           </p>
         </div>
         
@@ -69,7 +69,7 @@ export const GrafcetPalette = () => {
           <PaletteItem type="initialStep">
             <div className="relative">
                             <div
-                className="bg-grafcet-step-initial text-grafcet-step-initial-foreground border-4 border-grafcet-step-initial rounded-sm flex items-center justify-center font-bold text-sm shadow-lg"
+                className="bg-white text-grafcet-step-initial-foreground border-2 border-black rounded-sm flex items-center justify-center font-bold text-sm shadow-lg"
                 style={{ width: STEP_WIDTH, height: STEP_HEIGHT }}
               >
 			    0
@@ -80,16 +80,16 @@ export const GrafcetPalette = () => {
 
           <PaletteItem type="step">
             <div
-              className="bg-grafcet-step text-grafcet-step-foreground border-2 border-grafcet-step rounded-sm flex items-center justify-center font-bold text-sm shadow-lg"
+              className="bg-white text-grafcet-step-foreground border-2 border-black rounded-sm flex items-center justify-center font-bold text-sm shadow-lg"
               style={{ width: STEP_WIDTH, height: STEP_HEIGHT }}
             >
-              1
+              X
             </div>
           </PaletteItem>
 
           <PaletteItem type="action">
             <div
-              className="min-w-24 max-w-48 w-24 bg-grafcet-action text-grafcet-action-foreground border-2 border-grafcet-action flex items-center justify-center font-medium text-xs rounded-sm shadow-lg"
+              className="min-w-24 max-w-48 w-24 bg-white text-grafcet-action-foreground border-2 border-black flex items-center justify-center font-medium text-xs rounded-sm shadow-lg"
               style={{ height: STEP_HEIGHT }}
               >
 			  Action
