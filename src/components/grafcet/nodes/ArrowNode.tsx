@@ -26,6 +26,14 @@ export const ArrowNode = memo(({ data, selected }: NodeProps<ArrowNodeData>) => 
           '!-top-2 !left-1/2 !transform !-translate-x-1/2'
         )}
       />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        className={cn(
+          'w-3 h-3 !bg-transparent border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity z-0',
+          '!-bottom-2 !left-1/2 !transform !-translate-x-1/2'
+        )}
+      />
       <div
         ref={ref}
         contentEditable
