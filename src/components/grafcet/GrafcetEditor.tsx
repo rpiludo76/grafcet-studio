@@ -414,8 +414,26 @@ export const GrafcetEditor = () => {
       
       const sourceNode = nodes.find(n => n.id === edge.source);
       const targetNode = nodes.find(n => n.id === edge.target);
-      
+
       if (!sourceNode || !targetNode) return;
+      if (
+        !['step', 'initialStep', 'arrow'].includes(sourceNode.type || '') ||
+        !['step', 'initialStep', 'arrow'].includes(targetNode.type || '')
+      )
+        return;
+
+      const sourceX = sourceNode.position.x + STEP_WIDTH / 2;
+      const sourceY =
+        sourceNode.position.y +
+        (sourceNode.type === 'arrow' ? STEP_HEIGHT / 1.5 : STEP_HEIGHT);
+      const targetX = targetNode.position.x + STEP_WIDTH / 2;
+      const targetY = targetNode.position.y;
+
+      const transitionX = targetX - 12;
+      const transitionY = (sourceY + targetY) / 2 - 8;
+
+
+/*      if (!sourceNode || !targetNode) return;
       if (!['step', 'initialStep'].includes(sourceNode.type || '') || 
           !['step', 'initialStep'].includes(targetNode.type || '')) return;
       
@@ -428,7 +446,7 @@ export const GrafcetEditor = () => {
       //const transitionX = (sourceX + targetX) / 2 - 12; // center minus half transition width
 	  const transitionX = (targetX) - 12; // center minus half transition width
       //const transitionY = (sourceY + targetY) / 2 - 4; // center minus half transition height
-	  const transitionY = (targetY) - 4; // center minus half transition height 
+	  const transitionY = (targetY) - 4; // center minus half transition height */
       
       // Create transition node without handles
       const transitionNode: Node = {
