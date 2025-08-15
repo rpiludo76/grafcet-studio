@@ -346,19 +346,20 @@ export const GrafcetEditor = () => {
           if (
             !sourceNode ||
             !targetNode ||
-            !['step', 'initialStep'].includes(sourceNode.type || '') ||
-            !['step', 'initialStep'].includes(targetNode.type || '')
+            !['step', 'initialStep', 'arrow'].includes(sourceNode.type || '') ||
+            !['step', 'initialStep', 'arrow'].includes(targetNode.type || '')
           ) {
-            changed = true;
+            updated.push(node);
             return;
           }
           const sourceX = sourceNode.position.x + STEP_WIDTH / 2;
-          const sourceY = sourceNode.position.y + STEP_HEIGHT;
+          const sourceY =
+            sourceNode.position.y +
+            (sourceNode.type === 'arrow' ? STEP_HEIGHT / 1.5 : STEP_HEIGHT);
           const targetX = targetNode.position.x + STEP_WIDTH / 2;
           const targetY = targetNode.position.y;
-          //const x = (sourceX + targetX) / 2 - 12;
-		  const x = (targetX) - 12; // center minus half transition width
-		  const y = (sourceY + targetY) / 2 -8;
+          const x = targetX - 12;
+          const y = (sourceY + targetY) / 2 - 2;
           //const y = (targetY) - 30;
           if (node.position.x !== x || node.position.y !== y) {
             changed = true;
@@ -423,6 +424,7 @@ export const GrafcetEditor = () => {
         return;
 
       const sourceX = sourceNode.position.x + STEP_WIDTH / 2;
+	  //const sourceY = sourceNode.position.y + STEP_HEIGHT;
       const sourceY =
         sourceNode.position.y +
         (sourceNode.type === 'arrow' ? STEP_HEIGHT / 1.5 : STEP_HEIGHT);
@@ -430,8 +432,7 @@ export const GrafcetEditor = () => {
       const targetY = targetNode.position.y;
 
       const transitionX = targetX - 12;
-      const transitionY = (sourceY + targetY) / 2 - 8;
-
+      const transitionY = (sourceY + targetY) / 2 - 4;
 
 /*      if (!sourceNode || !targetNode) return;
       if (!['step', 'initialStep'].includes(sourceNode.type || '') || 
