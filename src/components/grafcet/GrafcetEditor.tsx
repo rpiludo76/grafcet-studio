@@ -355,11 +355,11 @@ export const GrafcetEditor = () => {
           const sourceX = sourceNode.position.x + STEP_WIDTH / 2;
           const sourceY =
             sourceNode.position.y +
-            (sourceNode.type === 'arrow' ? STEP_HEIGHT / 1.5 : STEP_HEIGHT);
+            (sourceNode.type === 'arrow' ? STEP_HEIGHT / 1.5 : STEP_HEIGHT/2);
           const targetX = targetNode.position.x + STEP_WIDTH / 2;
           const targetY = targetNode.position.y;
           const x = targetX - 12;
-          const y = (sourceY + targetY) / 2 - 2;
+          const y = (sourceY + targetY) / 2 +4;
           //const y = (targetY) - 30;
           if (node.position.x !== x || node.position.y !== y) {
             changed = true;
