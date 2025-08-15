@@ -98,8 +98,12 @@ export const GrafcetEditor = () => {
         style: { stroke: 'hsl(var(--grafcet-connection))' },
       };
       setEdges((eds) => addEdge(edge, eds));
+
+      if (isCtrlPressed) {
+        createTransitionForEdge(edge);
+      }
     },
-    [setEdges, nodes]
+    [setEdges, nodes, isCtrlPressed, transitionCounter, setNodes, createTransitionForEdge]
   );
 
   const onKeyDown = useCallback((event: KeyboardEvent) => {
@@ -406,15 +410,12 @@ export const GrafcetEditor = () => {
     updateTransitionPositions();
   }, [nodes, edges, updateTransitionPositions]);
 
-  const onEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
-    if (isCtrlPressed) {
-      event.stopPropagation();
-      
-      // Only allow transitions on grafcet edges between steps
+  const createTransitionForEdge = useCallback(
+    (edge: Edge) => {
       if (edge.type !== 'grafcet') return;
-      
-      const sourceNode = nodes.find(n => n.id === edge.source);
-      const targetNode = nodes.find(n => n.id === edge.target);
+
+      const sourceNode = nodes.find((n) => n.id === edge.source);
+      const targetNode = nodes.find((n) => n.id === edge.target);
 
       if (!sourceNode || !targetNode) return;
       if (
@@ -423,8 +424,6 @@ export const GrafcetEditor = () => {
       )
         return;
 
-      const sourceX = sourceNode.position.x + STEP_WIDTH / 2;
-	  //const sourceY = sourceNode.position.y + STEP_HEIGHT;
       const sourceY =
         sourceNode.position.y +
         (sourceNode.type === 'arrow' ? STEP_HEIGHT / 1.5 : STEP_HEIGHT);
@@ -434,39 +433,32 @@ export const GrafcetEditor = () => {
       const transitionX = targetX - 12;
       const transitionY = (sourceY + targetY) / 2 - 4;
 
-/*      if (!sourceNode || !targetNode) return;
-      if (!['step', 'initialStep'].includes(sourceNode.type || '') || 
-          !['step', 'initialStep'].includes(targetNode.type || '')) return;
-      
-      // Calculate position at the middle of the edge
-      const sourceX = sourceNode.position.x + STEP_WIDTH / 2; // center of step
-      const sourceY = sourceNode.position.y + STEP_HEIGHT; // bottom of step
-      const targetX = targetNode.position.x + STEP_WIDTH / 2; // center of step
-      const targetY = targetNode.position.y; // top of step
-      
-      //const transitionX = (sourceX + targetX) / 2 - 12; // center minus half transition width
-	  const transitionX = (targetX) - 12; // center minus half transition width
-      //const transitionY = (sourceY + targetY) / 2 - 4; // center minus half transition height
-	  const transitionY = (targetY) - 4; // center minus half transition height */
-      
-      // Create transition node without handles
       const transitionNode: Node = {
         id: `transition-${transitionCounter}`,
         type: 'transition',
-        position: { x: transitionX, y: transitionY},
+        position: { x: transitionX, y: transitionY },
         data: { condition: '', edgeId: edge.id },
         dragHandle: '.drag-handle',
         selectable: true,
         draggable: true,
       };
-      
-      // Add transition node without modifying existing edges
+
       setNodes((nds) => [...nds, transitionNode]);
-      setTransitionCounter(prev => prev + 1);
-      
+      setTransitionCounter((prev) => prev + 1);
       toast.success('Transition créée');
-    }
-  }, [isCtrlPressed, nodes, transitionCounter, setNodes]);
+    },
+    [nodes, transitionCounter, setNodes, setTransitionCounter]
+  );
+
+  const onEdgeClick = useCallback(
+    (event: React.MouseEvent, edge: Edge) => {
+      if (isCtrlPressed) {
+        event.stopPropagation();
+        createTransitionForEdge(edge);
+      }
+    },
+    [isCtrlPressed, createTransitionForEdge]
+  );
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => onKeyDown(event);
