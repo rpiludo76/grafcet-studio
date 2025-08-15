@@ -25,6 +25,7 @@ import { StepNode } from './nodes/StepNode';
 import { InitialStepNode } from './nodes/InitialStepNode';
 import { ActionNode } from './nodes/ActionNode';
 import { TransitionNode, type TransitionNodeData } from './nodes/TransitionNode';
+import { ArrowNode } from './nodes/ArrowNode';
 import { GrafcetEdge } from './edges/GrafcetEdge';
 import { ActionEdge } from './edges/ActionEdge';
 import { HorizontalEdge } from './edges/HorizontalEdge';
@@ -35,6 +36,7 @@ const nodeTypes = {
   step: StepNode,
   initialStep: InitialStepNode,
   action: ActionNode,
+  arrow: ArrowNode,
   transition: TransitionNode,
 };
 
@@ -148,6 +150,7 @@ export const GrafcetEditor = () => {
         step: { width: STEP_WIDTH, height: STEP_HEIGHT },
         initialStep: { width: STEP_WIDTH, height: STEP_HEIGHT },
         action: { width: 96, height: STEP_HEIGHT },
+        arrow: { width: STEP_WIDTH, height: STEP_HEIGHT / 2 },
       };
 
       const widthStr = event.dataTransfer.getData('application/reactflow/width');
@@ -209,6 +212,9 @@ export const GrafcetEditor = () => {
       } else if (type === 'action') {
         nodeId = `action-${Date.now()}`;
         nodeData = { text: 'Action' };
+      } else if (type === 'arrow') {
+        nodeId = `arrow-${Date.now()}`;
+        nodeData = { text: '→' };
       }
 
       const newNode: Node = {
@@ -220,7 +226,15 @@ export const GrafcetEditor = () => {
       };
 
       setNodes((nds) => nds.concat(newNode));
-      toast.success(`${type === 'initialStep' ? 'Étape initiale' : type === 'step' ? 'Étape' : 'Action'} ajoutée`);
+      toast.success(`${
+        type === 'initialStep'
+          ? 'Étape initiale'
+          : type === 'step'
+            ? 'Étape'
+            : type === 'action'
+              ? 'Action'
+              : 'Flèche'
+      } ajoutée`);
     },
     [nodes, stepCounter, setNodes, reactFlowInstance, snapGrid]
   );
@@ -344,8 +358,8 @@ export const GrafcetEditor = () => {
           const targetY = targetNode.position.y;
           //const x = (sourceX + targetX) / 2 - 12;
 		  const x = (targetX) - 12; // center minus half transition width
-		  //const y = (sourceY + targetY) / 2 - 4;
-          const y = (targetY) - 30;
+		  const y = (sourceY + targetY) / 2 -8;
+          //const y = (targetY) - 30;
           if (node.position.x !== x || node.position.y !== y) {
             changed = true;
             updated.push({ ...node, position: { x, y } });
