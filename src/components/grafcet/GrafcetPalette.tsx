@@ -92,7 +92,16 @@ export const GrafcetPalette = () => {
               className="min-w-24 max-w-48 w-24 bg-white text-grafcet-action-foreground border-2 border-black flex items-center justify-center font-medium text-xs rounded-sm shadow-lg"
               style={{ height: STEP_HEIGHT }}
               >
-			  Action
+                          Action
+            </div>
+          </PaletteItem>
+
+          <PaletteItem type="arrow">
+            <div
+              className="bg-gray-200 text-foreground border border-black flex items-center justify-center rounded-sm shadow-lg drag-handle"
+              style={{ width: STEP_WIDTH, height: STEP_HEIGHT / 2 }}
+            >
+              →
             </div>
           </PaletteItem>
         </div>
