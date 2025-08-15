@@ -69,6 +69,46 @@ export const GrafcetEditor = () => {
 
   const snapToGrid = useMemo(() => [snapGrid, snapGrid] as [number, number], [snapGrid]);
 
+  const createTransitionForEdge = useCallback(
+    (edge: Edge) => {
+      if (edge.type !== 'grafcet') return;
+
+      const sourceNode = nodes.find((n) => n.id === edge.source);
+      const targetNode = nodes.find((n) => n.id === edge.target);
+
+      if (!sourceNode || !targetNode) return;
+      if (
+        !['step', 'initialStep', 'arrow'].includes(sourceNode.type || '') ||
+        !['step', 'initialStep', 'arrow'].includes(targetNode.type || '')
+      )
+        return;
+
+      const sourceY =
+        sourceNode.position.y +
+        (sourceNode.type === 'arrow' ? STEP_HEIGHT / 1.5 : STEP_HEIGHT);
+      const targetX = targetNode.position.x + STEP_WIDTH / 2;
+      const targetY = targetNode.position.y;
+
+      const transitionX = targetX - 12;
+      const transitionY = (sourceY + targetY) / 2 - 4;
+
+      const transitionNode: Node = {
+        id: `transition-${transitionCounter}`,
+        type: 'transition',
+        position: { x: transitionX, y: transitionY },
+        data: { condition: '', edgeId: edge.id },
+        dragHandle: '.drag-handle',
+        selectable: true,
+        draggable: true,
+      };
+
+      setNodes((nds) => [...nds, transitionNode]);
+      setTransitionCounter((prev) => prev + 1);
+      toast.success('Transition créée');
+    },
+    [nodes, transitionCounter, setNodes, setTransitionCounter]
+  );
+
   const onConnect = useCallback(
     (params: Connection) => {
       // Determine edge type based on source and target positions
@@ -409,46 +449,6 @@ export const GrafcetEditor = () => {
   useEffect(() => {
     updateTransitionPositions();
   }, [nodes, edges, updateTransitionPositions]);
-
-  const createTransitionForEdge = useCallback(
-    (edge: Edge) => {
-      if (edge.type !== 'grafcet') return;
-
-      const sourceNode = nodes.find((n) => n.id === edge.source);
-      const targetNode = nodes.find((n) => n.id === edge.target);
-
-      if (!sourceNode || !targetNode) return;
-      if (
-        !['step', 'initialStep', 'arrow'].includes(sourceNode.type || '') ||
-        !['step', 'initialStep', 'arrow'].includes(targetNode.type || '')
-      )
-        return;
-
-      const sourceY =
-        sourceNode.position.y +
-        (sourceNode.type === 'arrow' ? STEP_HEIGHT / 1.5 : STEP_HEIGHT);
-      const targetX = targetNode.position.x + STEP_WIDTH / 2;
-      const targetY = targetNode.position.y;
-
-      const transitionX = targetX - 12;
-      const transitionY = (sourceY + targetY) / 2 - 4;
-
-      const transitionNode: Node = {
-        id: `transition-${transitionCounter}`,
-        type: 'transition',
-        position: { x: transitionX, y: transitionY },
-        data: { condition: '', edgeId: edge.id },
-        dragHandle: '.drag-handle',
-        selectable: true,
-        draggable: true,
-      };
-
-      setNodes((nds) => [...nds, transitionNode]);
-      setTransitionCounter((prev) => prev + 1);
-      toast.success('Transition créée');
-    },
-    [nodes, transitionCounter, setNodes, setTransitionCounter]
-  );
 
   const onEdgeClick = useCallback(
     (event: React.MouseEvent, edge: Edge) => {
