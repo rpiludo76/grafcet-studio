@@ -1,124 +1,53 @@
-import { Square } from 'lucide-react';
-import { useRef, type ReactNode } from 'react';
-import { STEP_WIDTH, STEP_HEIGHT } from './constants';
+import { memo, useRef } from 'react';
+import { Handle, Position, type NodeProps } from '@xyflow/react';
+import { cn } from '@/lib/utils';
+import { STEP_WIDTH, STEP_HEIGHT } from '../constants';
 
-interface PaletteItemProps {
-  type: string;
-  children: ReactNode;
+interface ArrowNodeData {
+  text: string;
 }
 
-const PaletteItem = ({ type, children }: PaletteItemProps) => {
+export const ArrowNode = memo(({ data, selected }: NodeProps<ArrowNodeData>) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const onDragStart = (event: React.DragEvent, nodeType: string) => {
-    event.dataTransfer.setData('application/reactflow', nodeType);
-    event.dataTransfer.effectAllowed = 'move';
-	
-    const element = ref.current;
-    if (element) {
-      const rect = element.getBoundingClientRect();
-      event.dataTransfer.setData(
-        'application/reactflow/width',
-        rect.width.toString()
-      );
-      event.dataTransfer.setData(
-        'application/reactflow/height',
-        rect.height.toString()
-      );	  
-	  
-      const clone = element.cloneNode(true) as HTMLElement;
-      clone.style.position = 'absolute';
-      clone.style.top = '-1000px';
-      clone.style.left = '-1000px';
-      clone.style.pointerEvents = 'none';
-      document.body.appendChild(clone);
-      event.dataTransfer.setDragImage(clone, rect.width / 2, rect.height / 2);
-      setTimeout(() => {
-        document.body.removeChild(clone);
-      }, 0);
+  const handleBlur = () => {
+    if (ref.current) {
+      data.text = ref.current.innerText || '→';
     }
   };
 
   return (
-    <div
-	  ref={ref}
-      className="cursor-grab active:cursor-grabbing"
-      draggable
-      onDragStart={(event) => onDragStart(event, type)}
-    >
-      {children}
-    </div>
-  );
-};
-
-export const GrafcetPalette = () => {
-  return (
-    <div className="w-44 bg-palette-bg border-r border-border p-4 overflow-y-auto">
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-sm font-semibold text-foreground mb-3 flex items-center">
-            <Square className="w-3 h-3 mr-2" />
-            Objets
-          </h2>
-          <p className="text-xs text-muted-foreground mb-4">
-            Glissez-déposez les objets sur la page
-          </p>
-        </div>
-        
-        <div className="space-y-3">
-          <PaletteItem type="initialStep">
-            <div className="relative">
-                            <div
-                className="bg-white text-grafcet-step-initial-foreground border-4 border-black border-double rounded-sm flex items-center justify-center font-bold text-sm shadow-lg"
-                style={{ width: STEP_WIDTH, height: STEP_HEIGHT }}
-              >
-			    0
-              </div>
-              
-            </div>
-          </PaletteItem>
-
-          <PaletteItem type="step">
-            <div
-              className="bg-white text-grafcet-step-foreground border-2 border-black rounded-sm flex items-center justify-center font-bold text-sm shadow-lg"
-              style={{ width: STEP_WIDTH, height: STEP_HEIGHT }}
-            >
-              X
-            </div>
-          </PaletteItem>
-
-          <PaletteItem type="action">
-            <div
-              className="min-w-24 max-w-48 w-24 bg-white text-grafcet-action-foreground border-2 border-black flex items-center justify-center font-medium text-xs rounded-sm shadow-lg"
-              style={{ height: STEP_HEIGHT }}
-              >
-                          Action
-            </div>
-          </PaletteItem>
-
-          <PaletteItem type="arrow">
-            <div
-              className="bg-gray-200 text-foreground border border-black flex items-center justify-center rounded-sm shadow-lg drag-handle"
-              style={{ width: STEP_WIDTH, height: STEP_HEIGHT / 2 }}
-            >
-              →←
-            </div>
-          </PaletteItem>
-        </div>
-        
-        <div className="mt-8 p-3 bg-muted rounded-lg">
-          <h3 className="text-xs font-medium text-foreground mb-2">Instructions :</h3>
-          <ul className="text-xs text-muted-foreground space-y-0">
-            <li>• Survolez les étapes pour voir les points de connexion</li>
-            <li>• Reliez les étapes par le haut/bas</li>
-            <li>• Reliez les actions par la gauche (vers étapes)</li>
-            <li>• Une seule étape initiale par GRAFCET</li>
-			<li>• Alt+26 pour → ou 27 pour ←</li>
-			<li>• Alt pour repositionner lien horizontaux</li>
-			<li>• Ctrl + clic sur lien pour ajouter transition</li>
-          </ul>
-        </div>
+    <div className="group relative">
+      <Handle
+        type="target"
+        position={Position.Top}
+        className={cn(
+          'w-3 h-3 !bg-transparent border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity z-0',
+          '!-top-2 !left-1/2 !transform !-translate-x-1/2'
+        )}
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        className={cn(
+          'w-3 h-3 !bg-transparent border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity z-0',
+          '!-bottom-2 !left-1/2 !transform !-translate-x-1/2'
+        )}
+      />
+      <div
+        ref={ref}
+        contentEditable
+        suppressContentEditableWarning
+        onBlur={handleBlur}
+        className={cn(
+          'bg-gray-200 text-foreground border border-black rounded-sm drag-handle shadow-lg',
+          'flex items-center justify-center',
+          selected && 'border-2 border-red-400 border-dashed'
+        )}
+        style={{ width: STEP_WIDTH, height: STEP_HEIGHT / 1.5 }}
+      >
+        {data.text ?? '→'}
       </div>
     </div>
   );
-};
+});
