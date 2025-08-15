@@ -1,3 +1,4 @@
+
 import { useCallback, useMemo, useState, useRef, useEffect } from 'react';
 import {
   ReactFlow,
@@ -74,7 +75,12 @@ export const GrafcetEditor = () => {
       // Determine edge type based on source and target positions
       const sourceNode = nodes.find(n => n.id === params.source);
       const targetNode = nodes.find(n => n.id === params.target);
-      
+
+      if (sourceNode?.type === 'transition' || targetNode?.type === 'transition') {
+        toast.error('Les transitions ne peuvent pas être reliées');
+        return;
+      }
+
       let edgeType = 'grafcet';
       const animated = false;
       
@@ -104,6 +110,13 @@ export const GrafcetEditor = () => {
   const onConnectEnd = useCallback(
     (event: MouseEvent) => {
       if (!connectingNodeId.current) return;
+      const sourceNode = nodes.find(n => n.id === connectingNodeId.current);
+      if (sourceNode?.type === 'transition') {
+        toast.error('Les transitions ne peuvent pas être reliées');
+        connectingNodeId.current = null;
+        return;
+      }
+
       const targetIsPane = (event.target as Element).classList.contains('react-flow__pane');
       if (!targetIsPane) {
         connectingNodeId.current = null;
@@ -138,7 +151,7 @@ export const GrafcetEditor = () => {
       setTransitionCounter((c) => c + 1);
       connectingNodeId.current = null;
     },
-    [reactFlowInstance, transitionCounter, setNodes, setEdges]
+    [reactFlowInstance, transitionCounter, setNodes, setEdges, nodes]
   );
 
   const onKeyDown = useCallback((event: KeyboardEvent) => {
@@ -245,7 +258,7 @@ export const GrafcetEditor = () => {
         nodeData = { number: 0, label: 'Étape initiale 0' };
       } else if (type === 'step') {
         nodeId = `step-${stepCounter}`;
-        nodeData = { number: stepCounter, label: `Étape ${stepCounter}` };
+        nodeData = { number: stepCounter, label: `${stepCounter}` };
         setStepCounter(prev => prev + 1);
       } else if (type === 'action') {
         nodeId = `action-${Date.now()}`;
@@ -507,6 +520,7 @@ export const GrafcetEditor = () => {
             onNodesChange={handleNodesChange}
             onEdgesChange={handleEdgesChange}
             onConnect={onConnect}
+            onReconnect={onConnect}
             onConnectStart={onConnectStart}
             onConnectEnd={onConnectEnd}
             onDragOver={onDragOver}
