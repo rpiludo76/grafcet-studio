@@ -16,7 +16,6 @@ import {
   useReactFlow,
   NodeChange,
   EdgeChange,
-  MarkerType,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -65,8 +64,6 @@ export const GrafcetEditor = () => {
   const [isCtrlPressed, setIsCtrlPressed] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const reactFlowInstance = useReactFlow();
-  const connectingNodeId = useRef<string | null>(null);
-  const connectingNode = useRef<{ nodeId: string; handleId: string | null } | null>(null);
 
   const snapToGrid = useMemo(() => [snapGrid, snapGrid] as [number, number], [snapGrid]);
 
@@ -101,57 +98,6 @@ export const GrafcetEditor = () => {
       setEdges((eds) => addEdge(edge, eds));
     },
     [setEdges, nodes]
-  );
-
-  const onConnectStart = useCallback((_: unknown, params: { nodeId?: string | null }) => {
-    connectingNodeId.current = params.nodeId || null;
-  }, []);
-
-  const onConnectEnd = useCallback(
-    (event: MouseEvent) => {
-      if (!connectingNodeId.current) return;
-      const sourceNode = nodes.find(n => n.id === connectingNodeId.current);
-      if (sourceNode?.type === 'transition') {
-        toast.error('Les transitions ne peuvent pas être reliées');
-        connectingNodeId.current = null;
-        return;
-      }
-
-      const targetIsPane = (event.target as Element).classList.contains('react-flow__pane');
-      if (!targetIsPane) {
-        connectingNodeId.current = null;
-        return;
-      }
-
-      const position = reactFlowInstance.screenToFlowPosition({ x: event.clientX, y: event.clientY });
-      const nodeId = `transition-${transitionCounter}`;
-      const edgeId = `edge-${connectingNodeId.current}-${nodeId}`;
-
-      const newNode: Node = {
-        id: nodeId,
-        type: 'transition',
-        position: { x: position.x - 12, y: position.y - 4 },
-        data: { condition: '', edgeId },
-        dragHandle: '.drag-handle',
-        selectable: true,
-        draggable: true,
-      };
-
-      const newEdge: Edge = {
-        id: edgeId,
-        source: connectingNodeId.current,
-        target: nodeId,
-        type: 'grafcet',
-        markerEnd: { type: MarkerType.ArrowClosed },
-        style: { stroke: 'hsl(var(--grafcet-connection))' },
-      };
-
-      setNodes((nds) => nds.concat(newNode));
-      setEdges((eds) => eds.concat(newEdge));
-      setTransitionCounter((c) => c + 1);
-      connectingNodeId.current = null;
-    },
-    [reactFlowInstance, transitionCounter, setNodes, setEdges, nodes]
   );
 
   const onKeyDown = useCallback((event: KeyboardEvent) => {
@@ -521,8 +467,6 @@ export const GrafcetEditor = () => {
             onEdgesChange={handleEdgesChange}
             onConnect={onConnect}
             onReconnect={onConnect}
-            onConnectStart={onConnectStart}
-            onConnectEnd={onConnectEnd}
             onDragOver={onDragOver}
             onDrop={onDrop}
             onEdgeClick={onEdgeClick}
