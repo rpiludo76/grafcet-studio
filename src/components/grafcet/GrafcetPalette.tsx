@@ -101,18 +101,21 @@ export const GrafcetPalette = () => {
               className="bg-gray-200 text-foreground border border-black flex items-center justify-center rounded-sm shadow-lg drag-handle"
               style={{ width: STEP_WIDTH, height: STEP_HEIGHT / 2 }}
             >
-              →
+              →←
             </div>
           </PaletteItem>
         </div>
         
         <div className="mt-8 p-3 bg-muted rounded-lg">
           <h3 className="text-xs font-medium text-foreground mb-2">Instructions :</h3>
-          <ul className="text-xs text-muted-foreground space-y-1">
+          <ul className="text-xs text-muted-foreground space-y-0">
             <li>• Survolez les étapes pour voir les points de connexion</li>
             <li>• Reliez les étapes par le haut/bas</li>
             <li>• Reliez les actions par la gauche (vers étapes)</li>
             <li>• Une seule étape initiale par GRAFCET</li>
+			<li>• Alt+26 pour → ou 27 pour ←</li>
+			<li>• Alt pour repositionner lien horizontaux</li>
+			<li>• Ctrl + clic sur lien pour ajouter transition</li>
           </ul>
         </div>
       </div>
