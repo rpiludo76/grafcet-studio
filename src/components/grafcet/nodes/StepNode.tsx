@@ -6,37 +6,34 @@ import { STEP_WIDTH, STEP_HEIGHT } from '../constants';
 interface StepNodeData {
   number: number;
   label: string;
-  placeholder?: boolean;
 }
 
-export const StepNode = memo(({ data, selected }: NodeProps) => {
+export const StepNode = memo(({ data, selected }: NodeProps<StepNodeData>) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState((data as any).number?.toString() || '1');
-  const placeholder = (data as any).placeholder;
+  const [editValue, setEditValue] = useState(data.number?.toString() || '1');
 
   const handleDoubleClick = () => {
-    if (placeholder) return;
     setIsEditing(true);
-    setEditValue((data as any).number?.toString() || '1');
+    setEditValue(data.number?.toString() || '1');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       const newNumber = parseInt(editValue);
       if (!isNaN(newNumber) && newNumber > 0) {
-        (data as any).number = newNumber;
-        (data as any).label = `${newNumber}`;
+        data.number = newNumber;
+        data.label = `${newNumber}`;
       }
       setIsEditing(false);
     } else if (e.key === 'Escape') {
       setIsEditing(false);
-      setEditValue((data as any).number?.toString() || '1');
+      setEditValue(data.number?.toString() || '1');
     }
   };
 
   const handleBlur = () => {
     setIsEditing(false);
-    setEditValue((data as any).number?.toString() || '1');
+    setEditValue(data.number?.toString() || '1');
   };
 
   return (
@@ -76,13 +73,12 @@ export const StepNode = memo(({ data, selected }: NodeProps) => {
           "bg-white text-grafcet-step-foreground border-2 border-black rounded-sm",
           "flex items-center justify-center font-bold text-lg cursor-pointer",
           "drag-handle shadow-lg",
-          selected && "border-2 border-red-400 border-dashed",
-          placeholder && "bg-gray-200"
+          selected && "border-2 border-red-400 border-dashed"
         )}
         style={{ width: STEP_WIDTH, height: STEP_HEIGHT }}
         onDoubleClick={handleDoubleClick}
       >
-        {isEditing && !placeholder ? (
+        {isEditing ? (
           <input
             type="text"
             value={editValue}
@@ -93,7 +89,7 @@ export const StepNode = memo(({ data, selected }: NodeProps) => {
             autoFocus
           />
         ) : (
-          <span>{(data as any).label ?? (data as any).number}</span>
+          <span>{data.label ?? (data as any).number}</span>
         )}
       </div>
     </div>

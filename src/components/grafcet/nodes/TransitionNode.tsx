@@ -1,5 +1,5 @@
 import { memo, useState } from 'react';
-import { NodeProps } from '@xyflow/react';
+import { Handle, Position, NodeProps } from '@xyflow/react';
 import { cn } from '@/lib/utils';
 
 export interface TransitionNodeData {
@@ -33,6 +33,8 @@ export const TransitionNode = memo(({ data, selected }: NodeProps<TransitionNode
 
   return (
     <div className="group relative flex items-center">
+      <Handle type="target" position={Position.Left} className="hidden" />
+      <Handle type="source" position={Position.Right} className="hidden" />
 
       {/* Horizontal transition line */}
       <div className="flex items-center">
@@ -53,7 +55,6 @@ export const TransitionNode = memo(({ data, selected }: NodeProps<TransitionNode
               onKeyDown={handleKeyDown}
               onBlur={handleBlur}
               className="bg-transparent border border-grafcet-connection rounded px-1 py-0.5 text-xs outline-none min-w-[80px]"
-              placeholder="Condition"
               autoFocus
             />
           ) : (
