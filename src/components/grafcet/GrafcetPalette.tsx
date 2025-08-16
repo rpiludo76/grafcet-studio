@@ -52,6 +52,17 @@ const PaletteItem = ({ type, children }: PaletteItemProps) => {
 };
 
 export const GrafcetPalette = () => {
+  const colors = [
+    'lightgray',
+    'blue',
+    'white',
+    'red',
+    'green',
+    'yellow',
+    'orange',
+    'violet',
+  ];
+
   return (
     <div className="w-[240px] bg-palette-bg border-r border-border p-4 overflow-y-auto">
       <div className="space-y-6">
@@ -64,7 +75,7 @@ export const GrafcetPalette = () => {
             Glissez-déposez les objets sur la page
           </p>
         </div>
-        
+
         <div className="space-y-3">
           <PaletteItem type="initialStep">
             <div className="relative">
@@ -105,7 +116,21 @@ export const GrafcetPalette = () => {
             </div>
           </PaletteItem>
         </div>
-        
+
+        <div className="grid grid-cols-4 gap-2">
+          {colors.map((color) => (
+            <div
+              key={color}
+              className="w-6 h-6 cursor-grab active:cursor-grabbing rounded-sm border border-black"
+              style={{ backgroundColor: color }}
+              draggable
+              onDragStart={(event) =>
+                event.dataTransfer.setData('application/grafcet-color', color)
+              }
+            />
+          ))}
+        </div>
+
         <div className="mt-8 p-3 bg-muted rounded-lg">
           <h3 className="text-xs font-medium text-foreground mb-2">Instructions :</h3>
           <ul className="text-xs text-muted-foreground space-y-0">
