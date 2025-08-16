@@ -53,7 +53,7 @@ const PaletteItem = ({ type, children }: PaletteItemProps) => {
 
 export const GrafcetPalette = () => {
   return (
-    <div className="w-44 bg-palette-bg border-r border-border p-4 overflow-y-auto">
+    <div className="w-[240px] bg-palette-bg border-r border-border p-4 overflow-y-auto">
       <div className="space-y-6">
         <div>
           <h2 className="text-sm font-semibold text-foreground mb-3 flex items-center">
@@ -91,8 +91,8 @@ export const GrafcetPalette = () => {
             <div
               className="min-w-24 max-w-48 w-24 bg-white text-grafcet-action-foreground border-2 border-black flex items-center justify-center font-medium text-xs rounded-sm shadow-lg"
               style={{ height: STEP_HEIGHT }}
-              >
-                          Action
+            >
+              Action
             </div>
           </PaletteItem>
 
