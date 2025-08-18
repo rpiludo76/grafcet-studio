@@ -62,6 +62,8 @@ export const ArrowNode = memo(({ id, data, selected }: NodeProps<ArrowNodeData>)
       >
         {data.text ?? '→'}
       </div>
+        {data.text ?? '→'}
+      </div>
     </div>
   );
 });
