@@ -11,12 +11,12 @@ interface ActionEdgeData {
   actionId: string;
 }
 
-export const ActionEdge = memo(({ id, sourceX, sourceY, markerEnd, style = {}, data, selected }: EdgeProps<ActionEdgeData>) => {
+export const ActionEdge = memo(({ id, sourceX, sourceY, markerEnd, style = {}, data, selected }: EdgeProps) => {
   const { setEdges } = useReactFlow();
 
-  const targetX = data?.targetX ?? sourceX;
-  const targetY = data?.targetY ?? sourceY;
-  const actionId = data?.actionId ?? 'X';
+  const targetX = typeof (data as any)?.targetX === 'number' ? (data as any).targetX : sourceX;
+  const targetY = typeof (data as any)?.targetY === 'number' ? (data as any).targetY : sourceY;
+  const actionId: string = typeof (data as any)?.actionId === 'string' ? (data as any).actionId : 'X';
 
   const srcX = sourceX - HANDLE_DIAMETER;
 
@@ -27,7 +27,7 @@ export const ActionEdge = memo(({ id, sourceX, sourceY, markerEnd, style = {}, d
       setEdges((eds) =>
         eds.map((ed) =>
           ed.id === id
-            ? { ...ed, data: { ...(ed.data as ActionEdgeData), actionId: value } }
+            ? { ...ed, data: { ...(ed.data as unknown as ActionEdgeData), actionId: value } }
             : ed
         )
       );

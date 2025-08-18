@@ -8,32 +8,33 @@ interface StepNodeData {
   label: string;
 }
 
-export const StepNode = memo(({ data, selected }: NodeProps<StepNodeData>) => {
+export const StepNode = memo(({ data, selected }: NodeProps) => {
+  const d = data as any;
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(data.number?.toString() || '1');
+  const [editValue, setEditValue] = useState(d.number?.toString() || '1');
 
   const handleDoubleClick = () => {
     setIsEditing(true);
-    setEditValue(data.number?.toString() || '1');
+    setEditValue(d.number?.toString() || '1');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       const newNumber = parseInt(editValue);
       if (!isNaN(newNumber) && newNumber > 0) {
-        data.number = newNumber;
-        data.label = `${newNumber}`;
+      (d as any).number = newNumber;
+      (d as any).label = `${newNumber}`;
       }
       setIsEditing(false);
     } else if (e.key === 'Escape') {
       setIsEditing(false);
-      setEditValue(data.number?.toString() || '1');
+      setEditValue(d.number?.toString() || '1');
     }
   };
 
   const handleBlur = () => {
     setIsEditing(false);
-    setEditValue(data.number?.toString() || '1');
+    setEditValue(d.number?.toString() || '1');
   };
 
   return (
@@ -89,7 +90,7 @@ export const StepNode = memo(({ data, selected }: NodeProps<StepNodeData>) => {
             autoFocus
           />
         ) : (
-          <span>{data.label ?? (data as any).number}</span>
+          <span>{(d as any).label ?? (d as any).number}</span>
         )}
       </div>
     </div>

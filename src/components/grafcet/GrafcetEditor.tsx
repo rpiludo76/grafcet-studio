@@ -16,6 +16,7 @@ import {
   useReactFlow,
   NodeChange,
   EdgeChange,
+  ConnectionLineType,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -501,7 +502,7 @@ export const GrafcetEditor = () => {
             snapGrid={snapToGrid}
             connectionMode={ConnectionMode.Loose}
             //connectionLineType="smoothstep"
-			connectionLineType="step"
+			connectionLineType={ConnectionLineType.Step}
 
             attributionPosition="bottom-left"
             style={{ backgroundColor: 'hsl(var(--canvas-bg))' }}

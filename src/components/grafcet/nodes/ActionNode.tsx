@@ -8,7 +8,7 @@ interface ActionNodeData {
   bgColor?: string;
 }
 
-export const ActionNode = memo(({ id, data, selected }: NodeProps<ActionNodeData>) => {
+export const ActionNode = memo(({ id, data, selected }: NodeProps) => {
   const { setNodes } = useReactFlow();
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState((data as any).text || 'Action');

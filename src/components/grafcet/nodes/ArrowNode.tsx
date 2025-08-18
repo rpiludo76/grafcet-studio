@@ -7,12 +7,13 @@ interface ArrowNodeData {
   text: string;
 }
 
-export const ArrowNode = memo(({ data, selected }: NodeProps<ArrowNodeData>) => {
+export const ArrowNode = memo(({ data, selected }: NodeProps) => {
   const ref = useRef<HTMLDivElement>(null);
+  const d = data as any;
 
   const handleBlur = () => {
     if (ref.current) {
-      data.text = ref.current.innerText || '→';
+      (d as any).text = ref.current.innerText || '→';
     }
   };
 
@@ -46,7 +47,7 @@ export const ArrowNode = memo(({ data, selected }: NodeProps<ArrowNodeData>) => 
         )}
         style={{ width: STEP_WIDTH, height: STEP_HEIGHT / 1.5 }}
       >
-        {data.text ?? '→'}
+        {(d as any).text ?? '→'}
       </div>
     </div>
   );

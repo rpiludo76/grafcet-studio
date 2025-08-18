@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useState, type KeyboardEvent } from 'react';
 import { Handle, Position, NodeProps, useReactFlow } from '@xyflow/react';
 import { cn } from '@/lib/utils';
 import { STEP_WIDTH, STEP_HEIGHT } from '../constants';
@@ -9,7 +9,7 @@ interface InitialStepNodeData {
   bgColor?: string;
 }
 
-export const InitialStepNode = memo(({ id, data, selected }: NodeProps<InitialStepNodeData>) => {
+export const InitialStepNode = memo(({ id, data, selected }: NodeProps) => {
   const { setNodes } = useReactFlow();
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState((data as any).number?.toString() || '0');
@@ -19,7 +19,7 @@ export const InitialStepNode = memo(({ id, data, selected }: NodeProps<InitialSt
     setEditValue((data as any).number?.toString() || '0');
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       const newNumber = parseInt(editValue);
       if (!isNaN(newNumber) && newNumber >= 0) {
@@ -69,7 +69,7 @@ export const InitialStepNode = memo(({ id, data, selected }: NodeProps<InitialSt
             "drag-handle shadow-lg",
             selected && "border-2 border-red-400 border-dashed"
           )}
-          style={{ width: STEP_WIDTH, height: STEP_HEIGHT, backgroundColor: data.bgColor || 'white' }}
+          style={{ width: STEP_WIDTH, height: STEP_HEIGHT, backgroundColor: (data as any).bgColor || 'white' }}
           onDoubleClick={handleDoubleClick}
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => {
@@ -102,7 +102,6 @@ export const InitialStepNode = memo(({ id, data, selected }: NodeProps<InitialSt
         {/* Double border effect */}
         <div className="absolute inset-1 border-2 border-black rounded-sm pointer-events-none"></div>
       </div>
-    </div>
   );
 
 });
