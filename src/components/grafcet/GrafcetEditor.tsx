@@ -248,17 +248,17 @@ export const GrafcetEditor = () => {
 
       if (type === 'initialStep') {
         nodeId = `step-0`;
-        nodeData = { number: 0, label: 'Étape initiale 0' };
+        nodeData = { number: 0, label: 'Étape initiale 0', bgColor: 'white'  };
       } else if (type === 'step') {
         nodeId = `step-${stepCounter}`;
-        nodeData = { number: stepCounter, label: `${stepCounter}` };
+        nodeData = { number: stepCounter, label: `${stepCounter}`, bgColor: 'white'  };
         setStepCounter(prev => prev + 1);
       } else if (type === 'action') {
         nodeId = `action-${Date.now()}`;
-        nodeData = { text: 'Action' };
+        nodeData = { text: 'Action', bgColor: 'hsl(var(--grafcet-action))' };
       } else if (type === 'arrow') {
         nodeId = `arrow-${Date.now()}`;
-        nodeData = { text: '→' };
+        nodeData = { text: '→←', bgColor: '#e5e7eb' };
       }
 
       const newNode: Node = {
@@ -524,3 +524,4 @@ export const GrafcetEditor = () => {
     </div>
   );
 };
+
