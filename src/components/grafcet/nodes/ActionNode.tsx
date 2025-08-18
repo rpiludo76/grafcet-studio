@@ -1,15 +1,13 @@
 import { memo, useState } from 'react';
-import { Handle, Position, NodeProps, useReactFlow } from '@xyflow/react';
+import { Handle, Position, NodeProps } from '@xyflow/react';
 import { cn } from '@/lib/utils';
 import { STEP_HEIGHT } from '../constants';
 
 interface ActionNodeData {
   text: string;
-  bgColor?: string;
 }
 
-export const ActionNode = memo(({ id, data, selected }: NodeProps<ActionNodeData>) => {
-  const { setNodes } = useReactFlow();
+export const ActionNode = memo(({ data, selected }: NodeProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState((data as any).text || 'Action');
 
@@ -53,20 +51,8 @@ export const ActionNode = memo(({ id, data, selected }: NodeProps<ActionNodeData
           "drag-handle shadow-lg rounded-sm",
           selected && "border-2 border-red-400 border-dashed"
         )}
-        style={{ height: STEP_HEIGHT, backgroundColor: (data as any).bgColor || 'hsl(var(--grafcet-action))' }}
+		style={{ height: STEP_HEIGHT }}
         onDoubleClick={handleDoubleClick}
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => {
-          e.preventDefault();
-          const color = e.dataTransfer.getData('application/grafcet-color');
-          if (color) {
-            setNodes((nds) =>
-              nds.map((n) =>
-                n.id === id ? { ...n, data: { ...n.data, bgColor: color } } : n
-              )
-            );
-          }
-        }}
       >
         {isEditing ? (
           <input
@@ -84,5 +70,4 @@ export const ActionNode = memo(({ id, data, selected }: NodeProps<ActionNodeData
       </div>
     </div>
   );
-
 });
