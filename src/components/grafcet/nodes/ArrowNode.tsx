@@ -1,15 +1,13 @@
 import { memo, useRef } from 'react';
-import { Handle, Position, type NodeProps, useReactFlow } from '@xyflow/react';
+import { Handle, Position, type NodeProps } from '@xyflow/react';
 import { cn } from '@/lib/utils';
 import { STEP_WIDTH, STEP_HEIGHT } from '../constants';
 
 interface ArrowNodeData {
   text: string;
-  bgColor?: string;
 }
 
-export const ArrowNode = memo(({ id, data, selected }: NodeProps<ArrowNodeData>) => {
-  const { setNodes } = useReactFlow();
+export const ArrowNode = memo(({ data, selected }: NodeProps<ArrowNodeData>) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const handleBlur = () => {
@@ -46,25 +44,10 @@ export const ArrowNode = memo(({ id, data, selected }: NodeProps<ArrowNodeData>)
           'flex items-center justify-center',
           selected && 'border-2 border-red-400 border-dashed'
         )}
-        style={{ width: STEP_WIDTH, height: STEP_HEIGHT / 1.5, backgroundColor: data.bgColor || '#e5e7eb' }}
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => {
-          e.preventDefault();
-          const color = e.dataTransfer.getData('application/grafcet-color');
-          if (color) {
-            setNodes((nds) =>
-              nds.map((n) =>
-                n.id === id ? { ...n, data: { ...n.data, bgColor: color } } : n
-              )
-            );
-          }
-        }}
+        style={{ width: STEP_WIDTH, height: STEP_HEIGHT / 1.5 }}
       >
-        {data.text ?? '→'}
-      </div>
         {data.text ?? '→'}
       </div>
     </div>
   );
 });
-
