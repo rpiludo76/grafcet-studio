@@ -1,16 +1,14 @@
 import { memo, useState } from 'react';
-import { Handle, Position, NodeProps, useReactFlow } from '@xyflow/react';
+import { Handle, Position, NodeProps } from '@xyflow/react';
 import { cn } from '@/lib/utils';
 import { STEP_WIDTH, STEP_HEIGHT } from '../constants';
 
 interface InitialStepNodeData {
   number: number;
   label: string;
-  bgColor?: string;
 }
 
-export const InitialStepNode = memo(({ id, data, selected }: NodeProps<InitialStepNodeData>) => {
-  const { setNodes } = useReactFlow();
+export const InitialStepNode = memo(({ data, selected }: NodeProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState((data as any).number?.toString() || '0');
 
@@ -70,20 +68,8 @@ export const InitialStepNode = memo(({ id, data, selected }: NodeProps<InitialSt
             "drag-handle shadow-lg",
             selected && "border-2 border-red-400 border-dashed"
           )}
-          style={{ width: STEP_WIDTH, height: STEP_HEIGHT, backgroundColor: data.bgColor || 'white' }}
+		  style={{ width: STEP_WIDTH, height: STEP_HEIGHT }}
           onDoubleClick={handleDoubleClick}
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            e.preventDefault();
-            const color = e.dataTransfer.getData('application/grafcet-color');
-            if (color) {
-              setNodes((nds) =>
-                nds.map((n) =>
-                  n.id === id ? { ...n, data: { ...n.data, bgColor: color } } : n
-                )
-              );
-            }
-          }}
         >
           {isEditing ? (
             <input
@@ -105,5 +91,4 @@ export const InitialStepNode = memo(({ id, data, selected }: NodeProps<InitialSt
       </div>
     </div>
   );
-
 });
